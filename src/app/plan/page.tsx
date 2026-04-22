@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { InputPanel } from "@/components/plan/input-panel";
+
 export const metadata: Metadata = {
   title: "Plan · FIRE Calculators",
   description:
@@ -32,10 +34,7 @@ export default function PlanPage() {
             aria-label="Scenario inputs"
             className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
           >
-            <h2 className="text-lg font-semibold">Your Inputs</h2>
-            <p className="mt-2 text-sm text-slate-500">
-              Input controls wire up in C2.
-            </p>
+            <InputPanel />
           </section>
 
           <div className="flex flex-col gap-6">

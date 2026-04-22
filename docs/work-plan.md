@@ -37,7 +37,7 @@ Current head when this tracker was added: `54378c1`
 ## Track C — Planner UI
 
 - [x] C1 `feat(ui): /plan page skeleton + Zustand store`
-- [ ] C2 `feat(ui): input panel component wired to store`
+- [x] C2 `feat(ui): input panel component wired to store`
 - [ ] C3 `feat(ui): result cards (5 calculator variants)`
 - [ ] C4 `feat(ui): portfolio growth chart`
 - [ ] C5 `feat(ui): landing page + header/footer`
