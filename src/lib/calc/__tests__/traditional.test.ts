@@ -4,7 +4,7 @@ import { calculateTraditionalFire } from "@/lib/calc/variants/traditional";
 
 describe("calculateTraditionalFire", () => {
   it("matches scenario 1 from the reference set", () => {
-    const result = calculateTraditionalFire({
+    const traditionalFireResult = calculateTraditionalFire({
       currentAge: 30,
       targetRetirementAge: 65,
       currentInvested: 50_000,
@@ -16,17 +16,17 @@ describe("calculateTraditionalFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(result).toMatchObject({
+    expect(traditionalFireResult).toMatchObject({
       target: 1_000_000,
       alreadyReached: false,
       variant: "traditional",
     });
 
-    expect(result.yearsToReach).toBeCloseTo(19.8468, 3);
+    expect(traditionalFireResult.yearsToReach).toBeCloseTo(19.8468, 3);
   });
 
   it("marks scenario 6 as already reached", () => {
-    const result = calculateTraditionalFire({
+    const traditionalFireResult = calculateTraditionalFire({
       currentAge: 30,
       targetRetirementAge: 65,
       currentInvested: 1_000_000,
@@ -38,7 +38,7 @@ describe("calculateTraditionalFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(result).toEqual({
+    expect(traditionalFireResult).toEqual({
       target: 1_000_000,
       yearsToReach: 0,
       alreadyReached: true,

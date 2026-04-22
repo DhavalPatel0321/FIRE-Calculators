@@ -4,6 +4,8 @@ import type { FireInputs, FireResult } from "@/lib/calc/types";
 export function calculateCoastFire(inputs: FireInputs): FireResult {
   const yearsUntilRetirement =
     inputs.targetRetirementAge - inputs.currentAge;
+  // Coast FIRE asks how much must be invested today so compounding alone reaches
+  // the traditional FI number by the target retirement age.
   const target =
     inputs.annualExpenses /
     inputs.safeWithdrawalRate /

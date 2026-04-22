@@ -2,22 +2,54 @@ import { describe, expect, it } from "vitest";
 
 import { yearsToReachTarget } from "@/lib/calc/solver";
 
-function portfolioValueAtYears(
-  years: number,
-  { V0, C, r }: { V0: number; C: number; r: number },
-) {
-  const growthFactor = (1 + r) ** years;
+type SolverTestInputs = {
+  currentInvested: number;
+  annualContribution: number;
+  expectedRealReturn: number;
+  target: number;
+};
 
-  return V0 * growthFactor + C * ((growthFactor - 1) / r);
+function calculateYearsToTarget({
+  currentInvested,
+  annualContribution,
+  expectedRealReturn,
+  target,
+}: SolverTestInputs) {
+  return yearsToReachTarget({
+    V0: currentInvested,
+    C: annualContribution,
+    r: expectedRealReturn,
+    target,
+  });
+}
+
+function calculatePortfolioValueAtYears(
+  years: number,
+  {
+    currentInvested,
+    annualContribution,
+    expectedRealReturn,
+  }: Omit<SolverTestInputs, "target">,
+) {
+  const growthFactor = (1 + expectedRealReturn) ** years;
+
+  if (expectedRealReturn === 0) {
+    return currentInvested + annualContribution * years;
+  }
+
+  return (
+    currentInvested * growthFactor +
+    annualContribution * ((growthFactor - 1) / expectedRealReturn)
+  );
 }
 
 describe("yearsToReachTarget", () => {
   it("returns 0 when the target is already reached", () => {
     expect(
-      yearsToReachTarget({
-        V0: 1_000_000,
-        C: 20_000,
-        r: 0.07,
+      calculateYearsToTarget({
+        currentInvested: 1_000_000,
+        annualContribution: 20_000,
+        expectedRealReturn: 0.07,
         target: 800_000,
       }),
     ).toBe(0);
@@ -25,38 +57,73 @@ describe("yearsToReachTarget", () => {
 
   it("uses the linear solution when real return is zero", () => {
     expect(
-      yearsToReachTarget({
-        V0: 200_000,
-        C: 5_000,
-        r: 0,
+      calculateYearsToTarget({
+        currentInvested: 200_000,
+        annualContribution: 5_000,
+        expectedRealReturn: 0,
         target: 1_500_000,
       }),
     ).toBe(260);
   });
 
+  it("returns infinity when return and contribution are both zero below target", () => {
+    expect(
+      calculateYearsToTarget({
+        currentInvested: 200_000,
+        annualContribution: 0,
+        expectedRealReturn: 0,
+        target: 1_500_000,
+      }),
+    ).toBe(Number.POSITIVE_INFINITY);
+  });
+
   it("uses the closed-form compounding solution when contributions are zero", () => {
-    const result = yearsToReachTarget({
-      V0: 100_000,
-      C: 0,
-      r: 0.07,
+    const yearsToTarget = calculateYearsToTarget({
+      currentInvested: 100_000,
+      annualContribution: 0,
+      expectedRealReturn: 0.07,
       target: 200_000,
     });
 
-    expect(result).toBeCloseTo(
+    expect(yearsToTarget).toBeCloseTo(
       Math.log(2) / Math.log(1.07),
       10,
     );
   });
 
+  it("returns infinity when growth-only mode starts from zero below target", () => {
+    expect(
+      calculateYearsToTarget({
+        currentInvested: 0,
+        annualContribution: 0,
+        expectedRealReturn: 0.07,
+        target: 100_000,
+      }),
+    ).toBe(Number.POSITIVE_INFINITY);
+  });
+
   it("solves a standard accumulation case", () => {
-    const inputs = {
-      V0: 50_000,
-      C: 20_000,
-      r: 0.07,
+    const accumulationInputs = {
+      currentInvested: 50_000,
+      annualContribution: 20_000,
+      expectedRealReturn: 0.07,
       target: 1_000_000,
     };
-    const result = yearsToReachTarget(inputs);
+    const yearsToTarget = calculateYearsToTarget(accumulationInputs);
 
-    expect(portfolioValueAtYears(result, inputs)).toBeCloseTo(inputs.target, 2);
+    expect(
+      calculatePortfolioValueAtYears(yearsToTarget, accumulationInputs),
+    ).toBeCloseTo(accumulationInputs.target, 2);
+  });
+
+  it("falls back to the bounded bisection search when Newton steps outside the search interval", () => {
+    const yearsToTarget = calculateYearsToTarget({
+      currentInvested: 1_000,
+      annualContribution: 1_000,
+      expectedRealReturn: 0.07,
+      target: 1_000_000_000_000,
+    });
+
+    expect(yearsToTarget).toBeCloseTo(100, 10);
   });
 });

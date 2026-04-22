@@ -4,7 +4,7 @@ import { calculateBaristaFire } from "@/lib/calc/variants/barista";
 
 describe("calculateBaristaFire", () => {
   it("matches scenario 3 from the reference set", () => {
-    const result = calculateBaristaFire({
+    const baristaFireResult = calculateBaristaFire({
       currentAge: 40,
       targetRetirementAge: 60,
       currentInvested: 500_000,
@@ -16,17 +16,17 @@ describe("calculateBaristaFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(result).toEqual({
+    expect(baristaFireResult).toEqual({
       target: 750_000,
-      yearsToReach: result.yearsToReach,
+      yearsToReach: baristaFireResult.yearsToReach,
       alreadyReached: false,
       variant: "barista",
     });
-    expect(result.yearsToReach).toBeCloseTo(5.465, 3);
+    expect(baristaFireResult.yearsToReach).toBeCloseTo(5.465, 3);
   });
 
   it("treats part-time income that fully covers expenses as already reached", () => {
-    const result = calculateBaristaFire({
+    const baristaFireResult = calculateBaristaFire({
       currentAge: 35,
       targetRetirementAge: 60,
       currentInvested: 25_000,
@@ -38,7 +38,7 @@ describe("calculateBaristaFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(result).toEqual({
+    expect(baristaFireResult).toEqual({
       target: 0,
       yearsToReach: 0,
       alreadyReached: true,

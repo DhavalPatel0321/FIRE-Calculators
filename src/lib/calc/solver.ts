@@ -11,6 +11,7 @@ const LOWER_BOUND = 0;
 const UPPER_BOUND = 100;
 const INITIAL_GUESS = 10;
 
+// Solve the accumulation equation as portfolio(years) - target = 0.
 function futureValueDifference(
   years: number,
   {
@@ -46,6 +47,7 @@ function futureValueDerivative(
   );
 }
 
+// Newton-Raphson is fast when it converges, but bisection guarantees a bounded answer.
 function bisectYears(inputs: YearsToReachTargetInputs) {
   let lowerBound = LOWER_BOUND;
   let upperBound = UPPER_BOUND;
@@ -72,6 +74,12 @@ function bisectYears(inputs: YearsToReachTargetInputs) {
   return midpoint;
 }
 
+/**
+ * Returns the number of years needed to reach the target portfolio.
+ *
+ * The public input keys follow the formula notation in `docs/formulas.md`,
+ * while the implementation immediately renames them to domain terms.
+ */
 export function yearsToReachTarget(inputs: YearsToReachTargetInputs) {
   const {
     V0: currentInvested,

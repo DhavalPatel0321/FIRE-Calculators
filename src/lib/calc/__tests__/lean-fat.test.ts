@@ -7,7 +7,7 @@ import {
 
 describe("calculateLeanFire", () => {
   it("uses the v1 default lean expense assumption", () => {
-    const result = calculateLeanFire({
+    const leanFireResult = calculateLeanFire({
       currentAge: 28,
       targetRetirementAge: 50,
       currentInvested: 30_000,
@@ -19,14 +19,14 @@ describe("calculateLeanFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(result.target).toBe(875_000);
-    expect(result.variant).toBe("lean");
-    expect(result.alreadyReached).toBe(false);
-    expect(result.yearsToReach).toBeCloseTo(17.111, 3);
+    expect(leanFireResult.target).toBe(875_000);
+    expect(leanFireResult.variant).toBe("lean");
+    expect(leanFireResult.alreadyReached).toBe(false);
+    expect(leanFireResult.yearsToReach).toBeCloseTo(17.111, 3);
   });
 
   it("uses leanExpenses when provided", () => {
-    const result = calculateLeanFire({
+    const leanFireResult = calculateLeanFire({
       currentAge: 35,
       targetRetirementAge: 60,
       currentInvested: 500_000,
@@ -39,14 +39,14 @@ describe("calculateLeanFire", () => {
       leanExpenses: 28_000,
     });
 
-    expect(result.target).toBe(700_000);
-    expect(result.variant).toBe("lean");
+    expect(leanFireResult.target).toBe(700_000);
+    expect(leanFireResult.variant).toBe("lean");
   });
 });
 
 describe("calculateFatFire", () => {
   it("uses the v1 default fat expense assumption", () => {
-    const result = calculateFatFire({
+    const fatFireResult = calculateFatFire({
       currentAge: 45,
       targetRetirementAge: 65,
       currentInvested: 800_000,
@@ -58,14 +58,14 @@ describe("calculateFatFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(result.target).toBe(3_750_000);
-    expect(result.variant).toBe("fat");
-    expect(result.alreadyReached).toBe(false);
-    expect(result.yearsToReach).toBeCloseTo(18.093, 3);
+    expect(fatFireResult.target).toBe(3_750_000);
+    expect(fatFireResult.variant).toBe("fat");
+    expect(fatFireResult.alreadyReached).toBe(false);
+    expect(fatFireResult.yearsToReach).toBeCloseTo(18.093, 3);
   });
 
   it("uses fatExpenses when provided", () => {
-    const result = calculateFatFire({
+    const fatFireResult = calculateFatFire({
       currentAge: 40,
       targetRetirementAge: 65,
       currentInvested: 5_000_000,
@@ -78,8 +78,8 @@ describe("calculateFatFire", () => {
       fatExpenses: 180_000,
     });
 
-    expect(result.target).toBe(4_500_000);
-    expect(result.variant).toBe("fat");
-    expect(result.alreadyReached).toBe(true);
+    expect(fatFireResult.target).toBe(4_500_000);
+    expect(fatFireResult.variant).toBe("fat");
+    expect(fatFireResult.alreadyReached).toBe(true);
   });
 });

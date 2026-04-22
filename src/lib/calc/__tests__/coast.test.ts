@@ -5,7 +5,7 @@ import { calculateCoastFire } from "@/lib/calc/variants/coast";
 describe("calculateCoastFire", () => {
   it("matches scenario 2 from the reference set", () => {
     const expectedTarget = 48_000 / 0.04 / 1.07 ** 30;
-    const result = calculateCoastFire({
+    const coastFireResult = calculateCoastFire({
       currentAge: 35,
       targetRetirementAge: 65,
       currentInvested: 100_000,
@@ -17,14 +17,14 @@ describe("calculateCoastFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(result.target).toBeCloseTo(expectedTarget, 10);
-    expect(result.alreadyReached).toBe(false);
-    expect(result.variant).toBe("coast");
-    expect(result.yearsToReach).toBeCloseTo(2.489, 3);
+    expect(coastFireResult.target).toBeCloseTo(expectedTarget, 10);
+    expect(coastFireResult.alreadyReached).toBe(false);
+    expect(coastFireResult.variant).toBe("coast");
+    expect(coastFireResult.yearsToReach).toBeCloseTo(2.489, 3);
   });
 
   it("matches the WalletBurst displayed coast number for its default example", () => {
-    const result = calculateCoastFire({
+    const coastFireResult = calculateCoastFire({
       currentAge: 30,
       targetRetirementAge: 67,
       currentInvested: 100_000,
@@ -36,7 +36,7 @@ describe("calculateCoastFire", () => {
       safeWithdrawalRate: 0.04,
     });
 
-    expect(Math.round(result.target)).toBe(175_723);
-    expect(result.alreadyReached).toBe(false);
+    expect(Math.round(coastFireResult.target)).toBe(175_723);
+    expect(coastFireResult.alreadyReached).toBe(false);
   });
 });

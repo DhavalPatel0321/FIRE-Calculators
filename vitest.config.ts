@@ -14,6 +14,7 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     coverage: {
       provider: "v8",
+      include: ["src/lib/calc/**/*.ts"],
       reporter: ["text", "html"],
     },
     exclude: ["e2e/**", "node_modules/**"],

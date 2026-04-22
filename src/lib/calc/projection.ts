@@ -1,5 +1,6 @@
 import type { FireInputs, ProjectionPoint } from "@/lib/calc/types";
 
+// Project one end-of-year balance per year. Contributions stop once retirement begins.
 export function projectPortfolio(
   inputs: FireInputs,
   years: number,
