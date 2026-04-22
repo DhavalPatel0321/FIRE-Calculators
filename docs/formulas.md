@@ -69,9 +69,9 @@ Structural variants of Traditional FIRE with different defaults:
 | Variant | Default expenses | Default SWR |
 | --- | --- | --- |
 | Lean FIRE | $35,000 | 4.0% |
-| Fat FIRE | $150,000 | 3.5% |
+| Fat FIRE | $150,000 | 4.0% |
 
-Fat FIRE uses a lower SWR because Fat FIRE retirees often retire earlier and plan for 40+ year horizons, where 4% has historically dropped below ~90% success.
+Fat FIRE uses the same 4.0% SWR default as the other v1 variants for simplicity in the shared model. (v1 default; v2 introduces per-variant SWR.)
 
 ---
 
