@@ -1,17 +1,16 @@
 # Claude Handoff
 
 Last updated: 2026-04-22
-Current stop point on `main`: `4aea0ce`
+Current stop point on `main`: `65fb482`
 
 ## Read this first on resume
 
 1. Read this file.
 2. Read [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1).
 3. Re-read the v1-authoritative parts of [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1):
-   - §1 v1 column in the feature matrix
-   - §4 v1 scope and v1 features
+   - §4.2 interactive growth chart
    - §5 shared `FireInputs` contract
-   - §6 formulas (if touching math)
+   - §10 v1 scope
 4. Re-read [docs/formulas.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/formulas.md:1) before changing calc logic.
 
 At the end of each session for this project, replace this file with a fresh handoff that matches the latest pushed commit and next unchecked work-plan item.
@@ -20,57 +19,49 @@ At the end of each session for this project, replace this file with a fresh hand
 
 - Foundation is complete through A3.
 - Calc core is complete through B8.
-- Planner UI is through C2: input panel is wired to the store on `/plan`.
-- The next required product commit is **C3**:
-  `feat(ui): result cards (5 calculator variants)`
-- Do not start C4 until C3 is committed, pushed, and CI is green.
+- Planner UI is through C3: `/plan` renders the wired input panel and the five FIRE result cards.
+- The next required product commit is **C4**:
+  `feat(ui): portfolio growth chart`
+- Do not start C5 until C4 is committed, pushed, and CI is green.
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
 - A1-A3: complete
 - B1-B8: complete
-- C1-C2: complete
-- C3-F5: not started
+- C1-C3: complete
+- C4-F5: not started
 
 ## Latest pushed commits
 
-- `753bd1e` `docs: refresh claude handoff for C2`
 - `a9f98a9` `feat(ui): /plan page skeleton + Zustand store`
 - `4aea0ce` `feat(ui): input panel component wired to store`
+- `65fb482` `feat(ui): result cards (5 calculator variants)`
 
 Latest confirmed green GitHub Actions runs:
 
 - B8: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24759041195`
 - C1: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24780716699`
 - C2: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24781230713`
+- C3: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24781763521`
 
 ## What already exists
 
-- Next.js 15 App Router scaffold with Tailwind and shadcn/ui primitives
-- Vitest, Playwright, and GitHub Actions workflow
-- Pure calc module under [src/lib/calc](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc:1)
-  - shared types/defaults/SWR presets
-  - solver
-  - Traditional, Coast, Barista, Lean, Fat variants
-  - projection
-  - scenario aggregator
-  - reference scenario coverage
-  - `computeAllVariants(inputs)` is exported from [src/lib/calc/index.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/index.ts:1) and returns `Record<FireVariant, FireResult>` — use this in C3 rather than wiring each variant function separately.
-- Zustand scenario store at [src/store/scenario.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/store/scenario.ts:1)
-  - `inputs` seeded from `DEFAULT_INPUTS`
-  - `setInput(key, value)` — generic, type-safe per `FireInputs` key
-  - `resetInputs()`
-- `/plan` page at [src/app/plan/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/plan/page.tsx:1)
-  - Server shell with `plan-page`, `plan-inputs`, `plan-results`, `plan-chart` data-testids
-  - `plan-inputs` section renders `<InputPanel />`
-  - `plan-results` and `plan-chart` are still placeholder cards
-- `<InputPanel />` client component at [src/components/plan/input-panel.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/input-panel.tsx:1)
-  - Groups: Personal (age), Financial ($), Assumptions (real return + SWR sliders), Advanced `<details>` (inflation slider + Lean/Fat expense overrides)
-  - Every field emits a `data-testid` of the form `input-<field>` or `slider-<field>` plus `slider-value-<field>` for the percent read-out
-  - Reset button has `data-testid="reset-inputs"` and calls `resetInputs()`
-- TSX tests are now enabled via `@vitejs/plugin-react`. Coverage config is still scoped to `src/lib/calc/**`, so component tests do not count toward the calc coverage threshold.
+- Next.js 15 App Router scaffold with Tailwind and shadcn/ui primitives.
+- Vitest (with `@vitejs/plugin-react` for TSX tests), Playwright, and GitHub Actions workflow.
+- Pure calc module under [src/lib/calc](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc:1):
+  - shared types/defaults/SWR presets, solver, Traditional/Coast/Barista/Lean/Fat variants, projection, scenario aggregator, reference scenarios.
+  - `computeAllVariants(inputs)` returns `Record<FireVariant, FireResult>` — used by `<ResultCards />` and should be reused by C4.
+  - `projectPortfolio(...)` is the function C4 will use to produce the chart series (see [src/lib/calc/projection.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/projection.ts:1) for its exact signature).
+- Zustand scenario store at [src/store/scenario.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/store/scenario.ts:1): `inputs` seeded from `DEFAULT_INPUTS`, `setInput(key, value)`, `resetInputs()`.
+- `/plan` page at [src/app/plan/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/plan/page.tsx:1):
+  - Server shell with `plan-page`, `plan-inputs`, `plan-results`, `plan-chart` data-testids.
+  - Inputs section renders `<InputPanel />`; results section renders `<ResultCards />`; `plan-chart` is still a placeholder.
+- `<InputPanel />` at [src/components/plan/input-panel.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/input-panel.tsx:1): Personal/Financial/Assumptions/Advanced groups, percent sliders, Reset button.
+- `<ResultCards />` at [src/components/plan/result-cards.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/result-cards.tsx:1): five-card grid in canonical variant order with target/timeline/tagline + `Already FI` branch.
+- `VARIANT_ORDER` and `VARIANT_THEME` exported from [src/components/plan/variant-theme.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/variant-theme.ts:1) — this is the shared color/copy module. **C4 must import `accentHex` from here** (do not duplicate the palette). Values are Traditional `#f97316`, Coast `#3b82f6`, Barista `#a855f7`, Lean `#10b981`, Fat `#f59e0b`.
+- TSX tests pattern: React Testing Library + jsdom. For store mutations inside a rendered test, wrap the `useScenarioStore.getState().setInput(...)` call in `act()`.
 
-The app home page (`/`) is still the placeholder landing page — `/` won't be rebuilt until C5.
+The home page (`/`) is still the placeholder landing page — it gets rebuilt in C5.
 
 ## Important decisions already made
 
@@ -78,7 +69,7 @@ The app home page (`/`) is still the placeholder landing page — `/` won't be r
 
 Use `PRD.md` + `docs/formulas.md` as the source of truth for math.
 
-The prompt’s scenario year labels conflict with the project’s own formulas in multiple cases. The user explicitly approved following the documented formulas instead of the conflicting prompt-year estimates.
+The prompt's scenario year labels conflict with the project's own formulas in multiple cases. The user explicitly approved following the documented formulas instead of the conflicting prompt-year estimates.
 
 Implications:
 
@@ -103,13 +94,15 @@ Preserve that style:
 - Wait for CI to go green before starting the next unchecked item.
 - No scope drift into v2/v3.
 
-### UI decisions locked in by C1-C2
+### UI decisions locked in by C1-C3
 
-- State library: **Zustand** (via `useScenarioStore`). URL-param sync is a D1 concern — do not introduce it in C3-C5.
+- State library: **Zustand** via `useScenarioStore`. URL-param sync is a D1 concern — not C4.
 - Default scenario shape is `DEFAULT_INPUTS`; do not redefine defaults elsewhere.
-- Page shell (`/plan/page.tsx`) stays a server component. Client-only pieces (anything subscribing to the store) live in `src/components/plan/*` with `"use client"` at the top.
-- Slider primitive from `@base-ui/react` renders as many thumbs as items in the `value` array — always pass a single-element array (`value={[x]}`) for single-thumb sliders.
-- Empty text in a numeric input is normalized to `0` in the store; intentional so typing/backspacing doesn't thrash NaN through the calc.
+- Page shell (`/plan/page.tsx`) stays a server component. Client-only pieces (anything subscribing to the store or using Recharts) live in `src/components/plan/*` with `"use client"` at the top.
+- Slider primitive (`@base-ui/react`) renders one thumb per item in the `value` array — always pass `value={[x]}`.
+- Empty text in a numeric input is normalized to `0` in the store.
+- **Variant colors come from `VARIANT_THEME`**, always. This is the single source of truth for the chart legend and card accents.
+- Currency formatting uses `Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })` in result cards. Reuse the same formatter style in chart tooltips.
 
 ## Tooling notes
 
@@ -124,56 +117,59 @@ Other environment notes:
 
 - `create-next-app@latest` now scaffolds Next 16 and refused this non-empty repo. A1 used `create-next-app@15.5.15` in a temp dir and merged the scaffold in.
 - `gh` CLI is installed and authenticated for checking Actions runs.
-- Local dev verification: `npm run dev -- --port 3300 --hostname 127.0.0.1`, then `curl http://127.0.0.1:3300/plan`. Input panel renders with all default values and data-testids.
+- Local dev verification: `npm run dev -- --port 3301 --hostname 127.0.0.1`, then `curl http://127.0.0.1:3301/plan`. Input panel + five result cards render with default values (Traditional $1,000,000, Coast $93,663, Barista $500,000, Lean $875,000, Fat $3,750,000).
+- `recharts` is already in `dependencies` (installed in A3) — do not install anything new for C4.
 
 ## Testing notes
 
 - `src/lib/calc` coverage was brought above the required threshold during B8.
-- TSX component tests are now enabled (via `@vitejs/plugin-react`). React Testing Library + jsdom works. When asserting the effect of direct `useScenarioStore.getState().setInput(...)` calls from inside a test where a component is rendered, wrap them in `act()` to avoid React 19 act warnings.
-- Last local C2 verification:
-  - `npx vitest run` — 14 files / 45 tests passing
+- TSX component tests run under Vitest via `@vitejs/plugin-react`. React Testing Library + jsdom works. When asserting the effect of direct `useScenarioStore.getState().setInput(...)` calls from inside a test where a component is rendered, wrap them in `act()` to avoid React 19 act warnings.
+- Last local C3 verification:
+  - `npx vitest run` — 15 files / 49 tests passing
   - `npm run typecheck`
-  - `npm run build` — `/plan` is now 17.3 kB First Load JS
+  - `npm run build` — `/plan` is now 18.8 kB First Load JS (+1.5 kB vs C2)
   - `npm run lint`
-  - Manual: `npm run dev -- --port 3300` and verify `/plan` renders defaults (7.0% / 4.0% / $150,000 / etc.)
-- Vitest coverage still only tracks `src/lib/calc/**` — do not expect component tests to contribute toward the calc coverage threshold.
+  - Manual dev-server smoke: result cards render with correct formatted targets and variant color accents.
+- Vitest coverage config still only tracks `src/lib/calc/**` — component tests don't contribute toward the calc coverage threshold.
 
-## Files to inspect before starting C3
+## Files to inspect before starting C4
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
-- [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1) §4.2 live calculator cards, §6 formulas
-- [docs/wireframes.html](/Users/dhavalpatel/projects/FIRE-Calculators/docs/wireframes.html:1672) results header + five-card grid
-- [src/lib/calc/index.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/index.ts:1) — especially `computeAllVariants`
-- [src/lib/calc/types.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/types.ts:1) — `FireResult` shape (`target`, `yearsToReach`, `alreadyReached`, `variant`)
-- [src/components/plan/input-panel.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/input-panel.tsx:1) — follow the same store-subscription pattern
+- [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1) §4.2 interactive growth chart
+- [docs/wireframes.html](/Users/dhavalpatel/projects/FIRE-Calculators/docs/wireframes.html:1727) chart container + legend
+- [src/lib/calc/projection.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/projection.ts:1) — confirm signature and return shape
+- [src/lib/calc/__tests__/projection.test.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/__tests__/projection.test.ts:1) — sample expected output
+- [src/components/plan/result-cards.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/result-cards.tsx:1) — mirror the subscribe-and-memoize pattern
+- [src/components/plan/variant-theme.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/variant-theme.ts:1) — palette source of truth
 
-## C3 restart brief
+## C4 restart brief
 
 Implement exactly:
 
-`feat(ui): result cards (5 calculator variants)`
+`feat(ui): portfolio growth chart`
 
 Expected deliverables:
 
-- A `<ResultCards />` client component (likely `src/components/plan/result-cards.tsx`) that:
+- A `<GrowthChart />` client component (likely `src/components/plan/growth-chart.tsx`) that:
   - subscribes to `useScenarioStore((state) => state.inputs)`
-  - calls `computeAllVariants(inputs)` on every render (cheap, all variants are pure)
-  - renders five cards: Traditional, Coast, Barista, Lean, Fat — in that order
-  - each card shows: variant name, `$target` (formatted), `yearsToReach` (one decimal) and age-at-FI, and a short explainer line pulled from the PRD / wireframe copy
-  - handles the `alreadyReached === true` case (e.g. "Already FI — congrats" or similar — do not print negative years)
-  - assigns consistent variant colors that match the wireframe (Traditional orange, Coast blue, Barista purple, Lean emerald, Fat amber) — these same colors must be reused by the chart in C4
-  - exposes `data-testid="result-card-<variant>"` on each card and a stable inner testid for the number (e.g. `result-number-<variant>`) so C4/F4 can assert against them
-- Swap the `plan-results` placeholder in `/plan/page.tsx` for `<ResultCards />`. Keep the `plan-results` data-testid on the wrapper.
+  - builds the chart series from `projectPortfolio(...)` (retirement-age horizon; extend modestly if the PRD wireframe suggests a longer window)
+  - renders a Recharts `AreaChart` (or `LineChart`) of portfolio value over time
+  - overlays the five FIRE targets as horizontal reference lines using `accentHex` from `VARIANT_THEME`
+  - uses a currency-formatted tooltip (match the result-cards formatter style)
+  - exposes `data-testid="growth-chart"` on the chart root and a stable legend testid (e.g. `growth-chart-legend`)
+  - handles the edge case where `yearsToReach = 0` / already FI (still renders a flat line rather than crashing)
+- Swap the `plan-chart` placeholder in `/plan/page.tsx` for `<GrowthChart />`. Keep the section's `plan-chart` data-testid on the wrapper.
 - Tests (Vitest + RTL):
-  - Renders all five variant cards with correct target amounts for `DEFAULT_INPUTS`
-  - Updating the store (via `setInput`) updates at least one visible card — proves subscription wiring
-  - `alreadyReached` branch renders the "already FI" copy (use the scenario 6 preset from the reference-scenarios tests if useful)
+  - Renders for `DEFAULT_INPUTS` without crashing and produces a non-empty series (assert on the chart root testid + presence of at least one reference line)
+  - Updating the store (e.g. change `expectedRealReturn`) changes the rendered series — probe via snapshot length or a data attribute you expose
+  - Already-FI case still renders (set `currentInvested` ≥ Traditional target)
+  - Because Recharts uses a `ResponsiveContainer` that needs a non-zero parent size in jsdom, render a fixed-width wrapper in tests (mock `ResponsiveContainer` or wrap it in a sized div). See the Recharts testing guide if you hit this.
 
-Out of scope for C3 (defer):
+Out of scope for C4:
 
-- Portfolio growth chart — C4
-- Landing page rebuild / header/footer — C5
-- URL sync / share button — D1
+- Scenario comparison overlay — D2.
+- Landing page rebuild / header/footer — C5.
+- URL sync / share button — D1.
 
 ## Working tree notes
 
