@@ -26,6 +26,12 @@ export type FireResult = {
   variant: FireVariant;
 };
 
+export type ProjectionPoint = {
+  age: number;
+  year: number;
+  portfolio: number;
+};
+
 export type SwrPreset = {
   safeWithdrawalRate: number;
   portfolioMultiple: number;
