@@ -14,7 +14,7 @@ export default function PlanPage() {
   return (
     <main
       data-testid="plan-page"
-      className="min-h-screen bg-slate-50 px-6 py-12 text-slate-900"
+      className="px-6 py-12 text-slate-900"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-2">
@@ -22,11 +22,11 @@ export default function PlanPage() {
             Planner
           </p>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Your FIRE Numbers
+            Your FIRE numbers
           </h1>
           <p className="max-w-2xl text-sm leading-6 text-slate-600">
-            Enter your inputs once and see every variant update live. Inputs,
-            results, and the growth chart will fill in as the planner is built.
+            Enter your inputs once and every variant recalculates live — target,
+            time to reach it, and the full projected growth curve.
           </p>
         </header>
 
