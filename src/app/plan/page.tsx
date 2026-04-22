@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { GrowthChart } from "@/components/plan/growth-chart";
 import { InputPanel } from "@/components/plan/input-panel";
 import { ResultCards } from "@/components/plan/result-cards";
 
@@ -52,10 +53,7 @@ export default function PlanPage() {
               aria-label="Portfolio growth chart"
               className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
             >
-              <h2 className="text-lg font-semibold">Portfolio Growth</h2>
-              <p className="mt-2 text-sm text-slate-500">
-                Recharts trajectory lands in C4.
-              </p>
+              <GrowthChart />
             </section>
           </div>
         </div>
