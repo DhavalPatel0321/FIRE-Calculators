@@ -3,6 +3,9 @@
 **Status:** Draft v0.2
 **Owner:** Dhaval Patel
 **Last updated:** 2026-04-21
+**Execution tracker:** [docs/work-plan.md](docs/work-plan.md)
+
+Update the matching checkbox in `docs/work-plan.md` in the same commit that implements that item, then wait for CI to go green before starting the next unchecked step.
 
 ---
 
