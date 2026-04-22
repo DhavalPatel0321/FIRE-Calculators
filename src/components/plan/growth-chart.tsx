@@ -21,6 +21,10 @@ import { VARIANT_ORDER, VARIANT_THEME } from "./variant-theme";
 const MIN_HORIZON_YEARS = 30;
 const PORTFOLIO_STROKE = VARIANT_THEME.traditional.accentHex;
 
+// Keep variant labels inside the plot area so long names ("Traditional", "Barista")
+// can't be clipped by the SVG right edge.
+export const REFERENCE_LABEL_POSITION = "insideTopRight" as const;
+
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -134,10 +138,11 @@ export function GrowthChart() {
                 ifOverflow="extendDomain"
                 label={{
                   value: VARIANT_THEME[variant].label,
-                  position: "right",
+                  position: REFERENCE_LABEL_POSITION,
                   fill: VARIANT_THEME[variant].accentHex,
                   fontSize: 10,
                   fontWeight: 600,
+                  offset: 4,
                 }}
               />
             ))}

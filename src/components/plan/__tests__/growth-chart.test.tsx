@@ -3,8 +3,12 @@ import type { PropsWithChildren } from "react";
 import { act, cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { computeChartHorizon, GrowthChart } from "@/components/plan/growth-chart";
-import { VARIANT_ORDER } from "@/components/plan/variant-theme";
+import {
+  computeChartHorizon,
+  GrowthChart,
+  REFERENCE_LABEL_POSITION,
+} from "@/components/plan/growth-chart";
+import { VARIANT_ORDER, VARIANT_THEME } from "@/components/plan/variant-theme";
 import { DEFAULT_INPUTS } from "@/lib/calc/defaults";
 import { projectPortfolio } from "@/lib/calc/projection";
 import { useScenarioStore } from "@/store/scenario";
@@ -99,6 +103,27 @@ describe("<GrowthChart />", () => {
       .getByTestId("growth-chart-end-balance")
       .textContent?.trim();
     expect(after).not.toEqual(before);
+  });
+
+  it("anchors variant labels inside the plot area so they can't overflow the SVG", () => {
+    // Regression: labels used position="right", which pushed long names like
+    // "Traditional" past the right edge of the chart SVG and clipped them.
+    expect(REFERENCE_LABEL_POSITION.startsWith("inside")).toBe(true);
+  });
+
+  it("renders each variant's full label text inside the chart", () => {
+    render(<GrowthChart />);
+    const chart = screen.getByTestId("growth-chart");
+    for (const variant of VARIANT_ORDER) {
+      const label = VARIANT_THEME[variant].label;
+      // Multiple nodes can legitimately match (legend entry + reference-line text),
+      // but at least one must render the full string — not a truncation like "Tr".
+      const matches = within(chart).getAllByText(label);
+      expect(matches.length).toBeGreaterThan(0);
+      for (const node of matches) {
+        expect(node.textContent).toBe(label);
+      }
+    }
   });
 
   it("still renders when the user is already past their FIRE target", () => {
