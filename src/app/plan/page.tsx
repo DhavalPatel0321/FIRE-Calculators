@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { InputPanel } from "@/components/plan/input-panel";
+import { ResultCards } from "@/components/plan/result-cards";
 
 export const metadata: Metadata = {
   title: "Plan · FIRE Calculators",
@@ -43,10 +44,7 @@ export default function PlanPage() {
               aria-label="FIRE variant results"
               className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
             >
-              <h2 className="text-lg font-semibold">Results</h2>
-              <p className="mt-2 text-sm text-slate-500">
-                Five variant cards land in C3.
-              </p>
+              <ResultCards />
             </section>
 
             <section
