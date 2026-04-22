@@ -1,7 +1,7 @@
 # Claude Handoff
 
-Last updated: 2026-04-21
-Current stop point on `main`: `687010f`
+Last updated: 2026-04-22
+Current stop point on `main`: `a9f98a9`
 
 ## Read this first on resume
 
@@ -19,26 +19,29 @@ At the end of each session for this project, replace this file with a fresh hand
 
 - Foundation is complete through A3.
 - Calc core is complete through B8.
-- The work-plan tracker was added after B8 and is the current stop-point.
-- The next required product commit is **C1**:
-  `feat(ui): /plan page skeleton + Zustand store`
-- Do not start C2 until C1 is committed, pushed, and CI is green.
+- Planner UI is started: C1 is done (skeleton page + Zustand store).
+- The next required product commit is **C2**:
+  `feat(ui): input panel component wired to store`
+- Do not start C3 until C2 is committed, pushed, and CI is green.
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
 - A1-A3: complete
 - B1-B8: complete
-- C1-F5: not started
+- C1: complete
+- C2-F5: not started
 
 ## Latest pushed commits
 
-- `54378c1` `feat(calc): scenario aggregator + reference scenarios test suite`
 - `687010f` `docs: add implementation work plan tracker`
+- `7ddc446` `docs: refresh claude handoff`
+- `a9f98a9` `feat(ui): /plan page skeleton + Zustand store`
 
 Latest confirmed green GitHub Actions runs:
 
 - B8: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24759041195`
 - work-plan docs checkpoint: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24759133313`
+- C1: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24780716699`
 
 ## What already exists
 
@@ -51,8 +54,17 @@ Latest confirmed green GitHub Actions runs:
   - projection
   - scenario aggregator
   - reference scenario coverage
+- Zustand scenario store at [src/store/scenario.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/store/scenario.ts:1)
+  - `inputs` seeded from `DEFAULT_INPUTS`
+  - `setInput(key, value)` — generic, type-safe per `FireInputs` key
+  - `resetInputs()` — restores `DEFAULT_INPUTS`
+- `/plan` skeleton at [src/app/plan/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/plan/page.tsx:1)
+  - Server component shell, no store consumption yet
+  - `data-testid` markers: `plan-page`, `plan-inputs`, `plan-results`, `plan-chart`
+  - Placeholder copy calls out which slot (C2/C3/C4) wires each section
+- Store tests at [src/store/__tests__/scenario.test.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/store/__tests__/scenario.test.ts:1) — 6 tests cover defaults, setInput, resetInputs, and referential-safety
 
-The app still only renders the placeholder landing page. `/plan` has not been started.
+The app home page (`/`) is still the placeholder landing page — `/` won't be rebuilt until C5.
 
 ## Important decisions already made
 
@@ -85,6 +97,12 @@ Preserve that style:
 - Wait for CI to go green before starting the next unchecked item.
 - No scope drift into v2/v3.
 
+### UI decisions locked in by C1
+
+- State library: **Zustand** (via `useScenarioStore`). URL-param sync is a D1 concern — do not introduce it in C2-C5.
+- Default scenario shape is whatever `DEFAULT_INPUTS` says; do not redefine defaults in the store.
+- The `/plan` page is currently a server component with no `"use client"` directive. C2 will need to extract the input panel into a client component that subscribes to `useScenarioStore`, while keeping the page shell itself server-rendered if possible.
+
 ## Tooling notes
 
 The machine default Node is too old for the current stack. Use Node 20 for app and npm commands:
@@ -98,47 +116,51 @@ Other environment notes:
 
 - `create-next-app@latest` now scaffolds Next 16 and refused this non-empty repo. A1 used `create-next-app@15.5.15` in a temp dir and merged the scaffold in.
 - `gh` CLI is installed and authenticated for checking Actions runs.
-- A local dev server was previously verified at `http://127.0.0.1:3000`, but only the placeholder home page exists right now.
+- A local dev server was previously verified at `http://127.0.0.1:3000`. `/plan` now renders the skeleton with the three labeled sections.
 
 ## Testing notes
 
 - `src/lib/calc` coverage was brought above the required threshold during B8.
-- The last local B8 verification included:
-  - `npx vitest run`
+- The last local C1 verification included:
+  - `npx vitest run` — 13 files / 41 tests passing (includes the 6 new scenario store tests)
   - `npm run typecheck`
-  - `npm run build`
+  - `npm run build` — `/plan` is listed as a static route
   - `npm run lint`
-  - `npx vitest run --coverage`
-- Vitest TSX component testing was intentionally avoided so far because the current setup is clean for pure TS tests but not yet tuned for TSX imports under Vitest.
+- Vitest TSX component testing is still intentionally avoided — the setup is clean for pure TS tests, not yet tuned for TSX imports under Vitest. When C2 introduces client components, decide whether to test them via Playwright (using the existing `data-testid` markers) or invest in a TSX-ready Vitest config.
 
-## Files to inspect before starting C1
+## Files to inspect before starting C2
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
-- [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1)
-- [docs/wireframes.html](/Users/dhavalpatel/projects/FIRE-Calculators/docs/wireframes.html:1577)
-- [src/lib/calc/index.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/index.ts:1)
-- [src/lib/calc/types.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/types.ts:1)
-- [src/lib/calc/defaults.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/defaults.ts:1)
+- [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1) §5 input contract, §6 SWR range
+- [docs/wireframes.html](/Users/dhavalpatel/projects/FIRE-Calculators/docs/wireframes.html:1591) input panel section
+- [src/store/scenario.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/store/scenario.ts:1)
+- [src/app/plan/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/plan/page.tsx:1)
+- [src/components/ui](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/ui:1) (existing shadcn primitives: button, card, input, label, slider, tabs, tooltip)
 
-## C1 restart brief
+## C2 restart brief
 
 Implement exactly:
 
-`feat(ui): /plan page skeleton + Zustand store`
+`feat(ui): input panel component wired to store`
 
 Expected deliverables:
 
-- `src/store/scenario.ts`
-  - store `FireInputs`
-  - expose `setInput`
-  - expose `resetInputs`
-- `src/app/plan/page.tsx`
-  - planner shell only
-  - inputs/results/chart placeholders
-  - `data-testid` markers on each section for future e2e work
-- tests for the new store
+- A client input-panel component (likely `src/components/plan/input-panel.tsx` or similar) that:
+  - reads every `FireInputs` field from `useScenarioStore`
+  - updates the store via `setInput` on change
+  - groups fields the way the wireframe does: Personal, Financial, Assumptions (return + SWR sliders)
+  - uses the existing shadcn primitives (Input/Label/Slider/Tooltip) so styling stays consistent
+  - keeps labels and ids human-readable (`currentInvested` etc.)
+  - exposes a Reset button that calls `resetInputs`
+- `/plan/page.tsx` swaps the `plan-inputs` placeholder for the new component. Keep the existing `data-testid` markers on the section wrapper so future Playwright tests still hit stable selectors.
+- Tests: at minimum a store-level test proving the input panel’s change flow updates state (if TSX testing is deferred, document why in the commit). Playwright is acceptable if you prefer to leave Vitest TSX setup for later.
 
-Keep C1 intentionally skeletal. Do not pull C2 or C3 work into it.
+Out of scope for C2 (belongs to C3-C5 or D1):
+
+- Result cards — the `plan-results` section stays as a placeholder.
+- Growth chart — the `plan-chart` section stays as a placeholder.
+- URL sync / share button — D1.
+- Landing page rebuild — C5.
 
 ## Working tree notes
 
