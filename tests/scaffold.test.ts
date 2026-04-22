@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import pkg from "../package.json";
 
-describe("project scaffold", () => {
+describe("sanity", () => {
   it("pins Next.js 15", () => {
     expect(pkg.dependencies.next).toBe("15.5.15");
   });
