@@ -1,6 +1,6 @@
 # FIRE Calculators v1 Work Plan
 
-Last updated: 2026-04-21
+Last updated: 2026-04-22
 Current head when this tracker was added: `54378c1`
 
 ## How to use this checklist
@@ -36,7 +36,7 @@ Current head when this tracker was added: `54378c1`
 
 ## Track C — Planner UI
 
-- [ ] C1 `feat(ui): /plan page skeleton + Zustand store`
+- [x] C1 `feat(ui): /plan page skeleton + Zustand store`
 - [ ] C2 `feat(ui): input panel component wired to store`
 - [ ] C3 `feat(ui): result cards (5 calculator variants)`
 - [ ] C4 `feat(ui): portfolio growth chart`
