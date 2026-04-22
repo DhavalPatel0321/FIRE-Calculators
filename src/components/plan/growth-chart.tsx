@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -13,10 +13,17 @@ import {
 } from "recharts";
 
 import { computeAllVariants, projectPortfolio } from "@/lib/calc";
-import type { FireInputs } from "@/lib/calc/types";
+import type { FireInputs, FireVariant } from "@/lib/calc/types";
 import { useScenarioStore } from "@/store/scenario";
 
 import { VARIANT_ORDER, VARIANT_THEME } from "./variant-theme";
+
+type VariantVisibility = Record<FireVariant, boolean>;
+
+const ALL_VARIANTS_VISIBLE: VariantVisibility = VARIANT_ORDER.reduce(
+  (acc, variant) => ({ ...acc, [variant]: true }),
+  {} as VariantVisibility,
+);
 
 const MIN_HORIZON_YEARS = 30;
 const PORTFOLIO_STROKE = VARIANT_THEME.traditional.accentHex;
@@ -55,6 +62,15 @@ export function GrowthChart() {
     [inputs, horizonYears],
   );
   const variants = useMemo(() => computeAllVariants(inputs), [inputs]);
+
+  const [visibility, setVisibility] = useState<VariantVisibility>(
+    ALL_VARIANTS_VISIBLE,
+  );
+  const toggleVariant = (variant: FireVariant) =>
+    setVisibility((previous) => ({
+      ...previous,
+      [variant]: !previous[variant],
+    }));
 
   const lastPoint = series[series.length - 1];
 
@@ -128,24 +144,26 @@ export function GrowthChart() {
                 fontSize: 12,
               }}
             />
-            {VARIANT_ORDER.map((variant) => (
-              <ReferenceLine
-                key={variant}
-                y={variants[variant].target}
-                stroke={VARIANT_THEME[variant].accentHex}
-                strokeDasharray="4 4"
-                strokeWidth={1.25}
-                ifOverflow="extendDomain"
-                label={{
-                  value: VARIANT_THEME[variant].label,
-                  position: REFERENCE_LABEL_POSITION,
-                  fill: VARIANT_THEME[variant].accentHex,
-                  fontSize: 10,
-                  fontWeight: 600,
-                  offset: 4,
-                }}
-              />
-            ))}
+            {VARIANT_ORDER.filter((variant) => visibility[variant]).map(
+              (variant) => (
+                <ReferenceLine
+                  key={variant}
+                  y={variants[variant].target}
+                  stroke={VARIANT_THEME[variant].accentHex}
+                  strokeDasharray="4 4"
+                  strokeWidth={1.5}
+                  ifOverflow="extendDomain"
+                  label={{
+                    value: VARIANT_THEME[variant].label,
+                    position: REFERENCE_LABEL_POSITION,
+                    fill: VARIANT_THEME[variant].accentHex,
+                    fontSize: 10,
+                    fontWeight: 600,
+                    offset: 4,
+                  }}
+                />
+              ),
+            )}
             <Area
               type="monotone"
               dataKey="portfolio"
@@ -159,7 +177,7 @@ export function GrowthChart() {
 
       <ul
         data-testid="growth-chart-legend"
-        className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600"
+        className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-600"
       >
         <li className="flex items-center gap-1.5">
           <span
@@ -169,20 +187,44 @@ export function GrowthChart() {
           />
           Portfolio
         </li>
-        {VARIANT_ORDER.map((variant) => (
-          <li
-            key={variant}
-            data-testid={`growth-chart-legend-${variant}`}
-            className="flex items-center gap-1.5"
-          >
-            <span
-              aria-hidden="true"
-              className="inline-block h-0.5 w-3 rounded-sm"
-              style={{ backgroundColor: VARIANT_THEME[variant].accentHex }}
-            />
-            {VARIANT_THEME[variant].label}
-          </li>
-        ))}
+        {VARIANT_ORDER.map((variant) => {
+          const theme = VARIANT_THEME[variant];
+          const isVisible = visibility[variant];
+          return (
+            <li
+              key={variant}
+              data-testid={`growth-chart-legend-${variant}`}
+              data-active={isVisible ? "true" : "false"}
+              className="flex items-center"
+            >
+              <label className="inline-flex cursor-pointer items-center gap-1.5 select-none">
+                <input
+                  type="checkbox"
+                  checked={isVisible}
+                  onChange={() => toggleVariant(variant)}
+                  data-testid={`growth-chart-toggle-${variant}`}
+                  aria-label={`Toggle ${theme.label} reference line`}
+                  className="size-3.5 cursor-pointer rounded border-slate-300"
+                  style={{ accentColor: theme.accentHex }}
+                />
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-0.5 w-3 rounded-sm transition-opacity"
+                  style={{
+                    backgroundColor: theme.accentHex,
+                    opacity: isVisible ? 1 : 0.3,
+                  }}
+                />
+                <span
+                  className="transition-colors"
+                  style={{ color: isVisible ? undefined : "#94a3b8" }}
+                >
+                  {theme.label}
+                </span>
+              </label>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

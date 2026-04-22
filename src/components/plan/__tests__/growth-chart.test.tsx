@@ -1,6 +1,13 @@
 import type { PropsWithChildren } from "react";
 
-import { act, cleanup, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -123,6 +130,50 @@ describe("<GrowthChart />", () => {
       for (const node of matches) {
         expect(node.textContent).toBe(label);
       }
+    }
+  });
+
+  it("defaults every variant toggle to checked", () => {
+    render(<GrowthChart />);
+    for (const variant of VARIANT_ORDER) {
+      const toggle = screen.getByTestId(
+        `growth-chart-toggle-${variant}`,
+      ) as HTMLInputElement;
+      expect(toggle.checked).toBe(true);
+    }
+  });
+
+  it("flips the checkbox and legend state when a toggle is clicked", () => {
+    render(<GrowthChart />);
+    const toggle = screen.getByTestId(
+      "growth-chart-toggle-fat",
+    ) as HTMLInputElement;
+    const legendItem = screen.getByTestId("growth-chart-legend-fat");
+
+    expect(toggle.checked).toBe(true);
+    expect(legendItem).toHaveAttribute("data-active", "true");
+
+    fireEvent.click(toggle);
+    expect(toggle.checked).toBe(false);
+    expect(legendItem).toHaveAttribute("data-active", "false");
+
+    fireEvent.click(toggle);
+    expect(toggle.checked).toBe(true);
+    expect(legendItem).toHaveAttribute("data-active", "true");
+  });
+
+  it("keeps each variant's toggle independent", () => {
+    render(<GrowthChart />);
+    fireEvent.click(screen.getByTestId("growth-chart-toggle-coast"));
+    expect(screen.getByTestId("growth-chart-legend-coast")).toHaveAttribute(
+      "data-active",
+      "false",
+    );
+    // Every other variant still active.
+    for (const variant of VARIANT_ORDER.filter((v) => v !== "coast")) {
+      expect(
+        screen.getByTestId(`growth-chart-legend-${variant}`),
+      ).toHaveAttribute("data-active", "true");
     }
   });
 
