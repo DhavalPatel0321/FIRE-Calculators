@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
 
 import { CopyUrlButton } from "@/components/plan/copy-url-button";
 import { Button } from "@/components/ui/button";
@@ -16,12 +16,35 @@ type NumericFireInputKey = {
     : never;
 }[keyof FireInputs];
 
+const thousandsFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 0,
+  useGrouping: true,
+});
+
+// Display integers with thousands separators, no fractional part. Used for
+// every $ field and the age fields. `undefined` and `0` both render as ""
+// so the field never displays a leading zero.
+export function formatNumberDisplay(value: number | undefined): string {
+  if (value === undefined) return "";
+  if (!Number.isFinite(value)) return "";
+  if (value === 0) return "";
+  return thousandsFormatter.format(Math.trunc(value));
+}
+
+// Strip everything that isn't a digit (commas, spaces, hyphens, leading
+// zeros) and return the resulting integer. Empty inputs return null so the
+// caller can treat them as "cleared" rather than "zero" if needed.
+export function sanitizeNumberInput(raw: string): number | null {
+  const digitsOnly = raw.replace(/\D/g, "");
+  if (digitsOnly === "") return null;
+  const parsed = Number(digitsOnly);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 type NumberFieldProps = {
   field: NumericFireInputKey;
   label: string;
   value: number | undefined;
-  min?: number;
-  step?: number;
   prefix?: string;
   suffix?: string;
 };
@@ -30,13 +53,18 @@ function NumberField({
   field,
   label,
   value,
-  min = 0,
-  step = 1,
   prefix,
   suffix,
 }: NumberFieldProps) {
   const id = useId();
   const setInput = useScenarioStore((state) => state.setInput);
+  // While focused, render exactly what the user typed so caret + leading-zero
+  // editing feel natural. On blur the field re-derives from the store, which
+  // strips leading zeros and adds thousands separators.
+  const [draftValue, setDraftValue] = useState<string | null>(null);
+
+  const displayValue =
+    draftValue !== null ? draftValue : formatNumberDisplay(value);
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -52,21 +80,22 @@ function NumberField({
         <Input
           id={id}
           data-testid={`input-${field}`}
-          type="number"
-          inputMode="decimal"
-          min={min}
-          step={step}
-          value={value ?? ""}
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
+          value={displayValue}
+          onFocus={() => {
+            // Seed the draft from the current store value so the user can
+            // edit in place without commas tripping up the caret.
+            setDraftValue(value === undefined || value === 0 ? "" : String(Math.trunc(value)));
+          }}
           onChange={(event) => {
             const raw = event.target.value;
-            if (raw === "") {
-              setInput(field, 0);
-              return;
-            }
-            const parsed = Number(raw);
-            if (!Number.isFinite(parsed)) return;
-            setInput(field, parsed);
+            setDraftValue(raw);
+            const sanitized = sanitizeNumberInput(raw);
+            setInput(field, sanitized ?? 0);
           }}
+          onBlur={() => setDraftValue(null)}
           className={prefix ? "pl-6" : undefined}
         />
         {suffix ? (
@@ -165,15 +194,11 @@ export function InputPanel() {
           field="currentAge"
           label="Current age"
           value={inputs.currentAge}
-          min={0}
-          step={1}
         />
         <NumberField
           field="targetRetirementAge"
           label="Target retirement age"
           value={inputs.targetRetirementAge}
-          min={0}
-          step={1}
         />
       </fieldset>
 
@@ -186,28 +211,24 @@ export function InputPanel() {
           label="Current invested assets"
           value={inputs.currentInvested}
           prefix="$"
-          step={1000}
         />
         <NumberField
           field="annualContribution"
           label="Annual contribution"
           value={inputs.annualContribution}
           prefix="$"
-          step={500}
         />
         <NumberField
           field="annualExpenses"
           label="Annual expenses"
           value={inputs.annualExpenses}
           prefix="$"
-          step={500}
         />
         <NumberField
           field="partTimeIncome"
           label="Part-time income (Barista)"
           value={inputs.partTimeIncome}
           prefix="$"
-          step={500}
         />
       </fieldset>
 
@@ -251,14 +272,12 @@ export function InputPanel() {
             label="Lean FIRE expenses"
             value={inputs.leanExpenses}
             prefix="$"
-            step={500}
           />
           <NumberField
             field="fatExpenses"
             label="Fat FIRE expenses"
             value={inputs.fatExpenses}
             prefix="$"
-            step={1000}
           />
         </div>
       </details>
