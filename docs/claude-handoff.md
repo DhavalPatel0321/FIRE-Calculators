@@ -1,49 +1,47 @@
 # Claude Handoff
 
 Last updated: 2026-04-25
-Current stop point on `main`: `f6e637e`
+Current stop point on `main`: `e3d9acd`
 
 ## Read this first on resume
 
 1. Read this file.
 2. Read [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1).
 3. Re-read the v1-authoritative parts of [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1):
-   - §4.2 v1 features (side-by-side scenario comparison)
-   - §5 shared `FireInputs` contract
+   - §4.2 v1 features (`/learn/*` MDX explainers)
+   - §6.6 SWR explainer copy (canonical source for the SWR `/learn` page)
    - §10 v1 scope
 
 At the end of each session for this project, replace this file with a fresh handoff that matches the latest pushed commit and next unchecked work-plan item.
 
 ## Current state
 
-- Track A (Foundation), Track B (Calc core), Track C (Planner UI), and Track D step 1 are complete.
-- `/plan` now hydrates from the URL on load, debounces store-driven URL updates via `history.replaceState`, and exposes a Copy-share-URL button next to Reset.
-- Number inputs were also rebuilt to display thousands separators and never leak leading zeros (`f6e637e`); `formatNumberDisplay` and `sanitizeNumberInput` are exported with regression tests.
-- The next required product commit is **D2**:
-  `feat(compare): /plan/compare side-by-side scenario overlay`
-- Do not start E1 until D2 is committed, pushed, and CI is green.
+- Track A (Foundation), Track B (Calc core), Track C (Planner UI), and Track D (Persistence + Compare) are complete.
+- `/plan` hydrates from URL, debounces store-driven URL updates via `history.replaceState`, has a Copy-share-URL button, formats $ amounts with comma separators, and links to `/plan/compare`.
+- `/plan/compare` overlays up to 3 scenarios with their own slate/emerald/violet palette, hydrates from `?sN.*` URL params, and re-keys slots after removal.
+- The next required product commit is **E1**:
+  `feat(content): MDX setup + /learn layout + fire-basics`
+- Do not start E2 until E1 is committed, pushed, and CI is green.
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
 - A1-A3: complete
 - B1-B8: complete
 - C1-C5: complete
-- D1: complete
-- D2-F5: not started
+- D1, D2: complete
+- E1-F5: not started
 
 ## Latest pushed commits
 
-- `49a4ce6` `feat(chart): toggleable reference lines per variant`
 - `78b974b` `feat(url): URL-encoded scenario state + share button`
 - `f6e637e` `fix(inputs): format $ amounts with commas + strip leading zeros`
+- `e3d9acd` `feat(compare): /plan/compare side-by-side scenario overlay`
 
 Latest confirmed green GitHub Actions runs:
 
-- C5: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24796024000`
-- chart label fix: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24796379218`
-- chart variant toggles: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24796513693`
 - D1: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24934280814`
 - input formatting: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24934369126`
+- D2: `https://github.com/DhavalPatel0321/FIRE-Calculators/actions/runs/24934690173`
 
 ## What already exists
 
@@ -51,37 +49,34 @@ Latest confirmed green GitHub Actions runs:
 - Vitest (with `@vitejs/plugin-react` for TSX tests), Playwright, GitHub Actions workflow.
 - Pure calc module under [src/lib/calc](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc:1):
   - types, defaults, SWR presets, solver, all variants, projection, scenario aggregator, reference scenarios.
-  - Entry points the UI uses: `computeAllVariants(inputs)` and `projectPortfolio(inputs, years)`.
-- URL serialization at [src/lib/url/scenario.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/url/scenario.ts:1):
-  - `encodeScenario(inputs)` — emits a `URLSearchParams`, omits fields equal to `DEFAULT_INPUTS`, drops undefined/non-finite numbers.
-  - `decodeScenario(params)` — returns `Partial<FireInputs>`, drops unknown keys, coerces numerics, rejects NaN/Infinity.
-  - **Reuse this module for D2** — comparison scenarios should serialize through the same encoder so saved scenarios stay diff-friendly.
+  - Entry points: `computeAllVariants(inputs)`, `projectPortfolio(inputs, years)`, plus per-variant exports.
+- URL serialization at [src/lib/url](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/url:1):
+  - `scenario.ts` — `encodeScenario` / `decodeScenario` for a single `FireInputs`.
+  - `compare.ts` — `encodeCompareScenarios` / `decodeCompareScenarios` for up to `MAX_COMPARE_SCENARIOS` slots, plus `defaultLabelForIndex`. Builds on top of the per-scenario encoder, namespaces fields with `sN.`.
 - Zustand scenario store at [src/store/scenario.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/store/scenario.ts:1): `inputs` (from `DEFAULT_INPUTS`), `setInput(key, value)`, `applyInputs(partial)`, `resetInputs()`.
 - Routes:
   - `/` — landing page (hero + five-variant strip + v1 features + CTA).
-  - `/plan` — planner (inputs + result cards + growth chart). Mounts `<ScenarioUrlSync />` for URL hydration / replaceState.
-  - `/plan/compare` — does not exist yet (D2).
-  - `/learn` — does not exist yet; header and landing link to it (E1 will create it).
+  - `/plan` — planner (inputs + result cards + growth chart). Mounts `<ScenarioUrlSync />` for URL hydration / replaceState. Header has a "Compare scenarios" CTA.
+  - `/plan/compare` — server shell mounting `<CompareView />` (client). Up to 3 scenarios via `useReducer` (`compareReducer` + `initialCompareState`), URL-synced through `compare.ts`.
+  - `/learn` — does not exist yet (E1 will create it; header and landing already link to it).
 - Site chrome at [src/components/site](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/site:1) (`SiteHeader`, `SiteFooter`), mounted in [src/app/layout.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/layout.tsx:1).
 - Planner components at [src/components/plan](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan:1):
-  - `InputPanel` — Personal/Financial/Assumptions/Advanced groups.
-    - `<NumberField />` is now a draft-aware text input that displays thousands separators (`formatNumberDisplay`) when unfocused and sanitizes via `sanitizeNumberInput` (digits-only, leading zeros stripped via numeric coercion). Tests pin both helpers.
-    - Header has Reset + `<CopyUrlButton />`.
-  - `ResultCards` — canonical-order five-card grid, "Already FI" branch.
-  - `GrowthChart` — Recharts `AreaChart` over `computeChartHorizon()` horizon, five dashed `ReferenceLine`s with toggle checkboxes in the legend (local view state; **not** scenario-serialized).
-  - `ScenarioUrlSync` — invisible client component; `useEffect` on mount decodes `window.location.search` and calls `applyInputs`. A second effect debounces store-driven `history.replaceState` (~150 ms).
-  - `CopyUrlButton` — `navigator.clipboard.writeText(window.location.href)` with a 1.5 s "Copied!" flash; fails silently if clipboard rejects.
-  - `variant-theme.ts` — `VARIANT_ORDER`, `VARIANT_THEME` (accent hex + classes + tagline). Single source of truth for variant colors.
-  - `REFERENCE_LABEL_POSITION` is exported from `growth-chart.tsx` and locked to `"insideTopRight"` by a regression test — don't move it back to `"right"`.
+  - `InputPanel` — Personal/Financial/Assumptions/Advanced. `<NumberField />` is a draft-aware text input (`type="text"`) that displays thousands separators via `formatNumberDisplay` and sanitizes via `sanitizeNumberInput`. **Don't revert to `type="number"`** — that's what allowed the leading-zero bug.
+  - `ResultCards`, `GrowthChart` (with `REFERENCE_LABEL_POSITION = "insideTopRight"`, exported and regression-tested), `ScenarioUrlSync`, `CopyUrlButton`.
+  - `variant-theme.ts` — `VARIANT_ORDER`, `VARIANT_THEME` (single source of truth for variant colors). Used by ResultCards, GrowthChart, and the landing page.
+  - `scenario-palette.ts` — `SCENARIO_PALETTE` (slot 1 slate, slot 2 emerald, slot 3 violet). **Distinct from VARIANT_THEME.** E1 doesn't need this; D2 uses it.
+  - `compare-state.ts` — `compareReducer`, `initialCompareState`, `CompareState`, `CompareAction`. Re-keys remaining scenarios after a remove so ids stay `s1..sN` with no gaps.
+  - `compare-view.tsx` — the client `<CompareView />`. Owns the reducer + URL sync.
 
-Stable data-testids (D2 / F4 can rely on these):
+Stable data-testids (E1 / F4 can rely on these):
 
 - Layout: `site-header`, `site-header-brand`, `site-header-nav-home|plan|learn`, `site-header-cta`, `site-footer`, `site-footer-repo`.
 - Landing: `landing-page`, `landing-headline`, `landing-cta-primary`, `landing-cta-secondary`, `landing-cta-footer`, `landing-variants`, `landing-variant-<variant>`.
-- Planner shell: `plan-page`, `plan-inputs`, `plan-results`, `plan-chart`.
+- Planner shell: `plan-page`, `plan-inputs`, `plan-results`, `plan-chart`, `plan-compare-link`.
 - Inputs: `input-<field>`, `slider-<field>`, `slider-value-<field>`, `reset-inputs`, `copy-url`.
 - Results: `result-cards-grid`, `result-card-<variant>`, `result-number-<variant>`, `result-timeline-<variant>`.
 - Chart: `growth-chart`, `growth-chart-legend`, `growth-chart-legend-<variant>` (carries `data-active="true"|"false"`), `growth-chart-toggle-<variant>`, `growth-chart-end-balance`.
+- Compare: `compare-page`, `compare-scenarios`, `compare-empty`, `compare-add-from-planner`, `compare-edit-link`, `compare-scenario-card-<index>`, `compare-remove-<id>`, `compare-chart`, `compare-chart-empty`.
 
 ## Important decisions already made
 
@@ -101,17 +96,17 @@ The user explicitly asked for human-readable variable names, including in tests,
 - No scope drift into v2/v3.
 - Interleaving a targeted `fix(...)` between work-plan items is fine when the user explicitly asks; it doesn't get its own checkbox but must not block the next queued item.
 
-### UI / state decisions locked in by C1-D1
+### UI / state decisions locked in by C1-D2
 
-- State library: **Zustand** via `useScenarioStore`. URL sync is one-way write (store → URL via `history.replaceState`) plus a one-shot URL → store hydration on mount.
+- State library: **Zustand** for the planner; **`useReducer`** for compare. URL sync is one-way write (state → URL via `history.replaceState`) plus a one-shot URL → state hydration on mount.
 - Default scenario shape is `DEFAULT_INPUTS`.
 - Page shells stay server components. Client-only pieces live in `src/components/**` with `"use client"`.
-- Variant colors come from `VARIANT_THEME`.
-- Currency is always formatted with `Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })`. The number-field display uses a sibling formatter without the `style: "currency"` so the prefix `$` stays inside the input chrome (don't refactor those into one shared formatter — they have different output forms).
+- Variant colors come from `VARIANT_THEME`; compare-slot colors come from `SCENARIO_PALETTE`.
+- Currency is always formatted with `Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })`. The number-field display uses a sibling formatter without `style: "currency"` so the prefix `$` stays inside the input chrome.
 - Chart horizon: `computeChartHorizon(inputs)` returns `max(targetRetirementAge - currentAge, 30)`.
 - Reference-line labels stay inside the plot area via `REFERENCE_LABEL_POSITION` (regression-tested).
 - Per-variant chart visibility is **view preference, not scenario state** — must not be serialized into URL or comparison overlays.
-- `<NumberField />` is a draft-aware text input. Don't revert to `type="number"` — that's what allowed the leading-zero bug. The draft state and `formatNumberDisplay` / `sanitizeNumberInput` helpers are pinned by tests.
+- `<NumberField />` is a draft-aware text input. Don't revert to `type="number"`.
 
 ## Tooling notes
 
@@ -123,60 +118,58 @@ export PATH="$(dirname "$NODE20"):$PATH"
 ```
 
 - `gh` CLI is installed and authenticated.
-- Local dev verification: `npm run dev -- --port 3308 --hostname 127.0.0.1`. `/plan` hydrates from query strings (`?currentAge=45&safeWithdrawalRate=0.035` works), updates the URL on input change, and the Copy-URL button shows the "Copied!" flash on click.
+- Local dev verification: `npm run dev -- --port 3309 --hostname 127.0.0.1`. `/plan/compare` shows the empty state by default; `?s1.currentAge=33&s2.currentAge=45&s2.label=Late+saver` hydrates two cards on mount; "Add current planner scenario" pulls the live `/plan` store into a new slot and disables once three slots are filled.
+- E1 will need MDX support. **MDX is not installed yet.** Likely need `@next/mdx` + `@mdx-js/loader` + `@mdx-js/react` and a `next.config.ts` update. Check existing config first.
 
 ## Testing notes
 
 - `src/lib/calc` coverage was brought above the required threshold during B8.
 - TSX component tests run under Vitest via `@vitejs/plugin-react`. React Testing Library + jsdom works.
-- For Recharts tests, mock `ResponsiveContainer` with a sized div. Recharts does **not** reliably render `<ReferenceLine>` label text as DOM-visible `<text>` in jsdom — prefer asserting on state-bound attributes (`data-active` on the legend `<li>`) over counting SVG labels.
-- For `<ScenarioUrlSync />` tests, `vi.useFakeTimers()` is required because the URL update is debounced. Use `window.history.replaceState` to seed the URL before mount.
-- Last local verification (after the formatting fix):
-  - `npx vitest run` — 21 files / 94 tests passing
+- For Recharts tests, mock `ResponsiveContainer` with a sized div. The same mock pattern works for `<CompareView />`.
+- For `<ScenarioUrlSync />` and `<CompareView />` tests, `vi.useFakeTimers()` is required because the URL update is debounced. Use `window.history.replaceState` to seed the URL before mount.
+- Last local verification (after D2):
+  - `npx vitest run` — 24 files / 115 tests passing
   - `npm run typecheck`
-  - `npm run build` — `/` 161 kB, `/plan` 280 kB
+  - `npm run build` — `/` 161 kB, `/plan` 287 kB, `/plan/compare` 277 kB
   - `npm run lint`
-  - Manual dev-server smoke: input fields show "150,000" / "30,000"; typing "045" then blurring shows "45"; URL updates with debounce on input change.
+  - Manual dev-server smoke on `/plan/compare`: empty state renders, URL-seeded scenarios hydrate, planner-add disables at 3, removal re-keys remaining slots.
 - Vitest coverage config still only tracks `src/lib/calc/**`.
 
-## Files to inspect before starting D2
+## Files to inspect before starting E1
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
-- [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1) §4.2 (side-by-side scenario comparison)
-- [src/lib/url/scenario.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/url/scenario.ts:1) — encode/decode for storing comparison scenarios
-- [src/lib/calc/index.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc/index.ts:1) — `computeAllVariants`, `projectPortfolio`
-- [src/components/plan/growth-chart.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/growth-chart.tsx:1) — chart pattern; D2 likely needs an n-series variant
-- [src/components/plan/variant-theme.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/variant-theme.ts:1) — palette (only 5 variant colors; need a separate scenario palette for up to 3 overlaid scenarios)
+- [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1) §4.2 + §6.6 (SWR explainer table is the canonical source for `/learn/swr` rows)
+- [next.config.ts](/Users/dhavalpatel/projects/FIRE-Calculators/next.config.ts:1) — confirm Turbopack flags before adding MDX wiring
+- [src/components/site/site-header.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/site/site-header.tsx:1) — already links to `/learn`; should now lead somewhere
+- [src/components/plan/variant-theme.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/variant-theme.ts:1) — reuse `VARIANT_THEME` for variant explainer accents
 
-## D2 restart brief
+## E1 restart brief
 
 Implement exactly:
 
-`feat(compare): /plan/compare side-by-side scenario overlay`
-
-Per PRD §4.2: "save up to 3 scenarios and overlay their trajectories on one chart."
+`feat(content): MDX setup + /learn layout + fire-basics`
 
 Expected deliverables:
 
-- A `/plan/compare` route at `src/app/plan/compare/page.tsx` (server shell, mounts a client `<CompareView />`).
-- Comparison state model:
-  - At most 3 scenarios. Each scenario has a label (auto: "Scenario 1/2/3"), an overlay color (introduce a `SCENARIO_PALETTE` distinct from `VARIANT_THEME`), and a `FireInputs` payload.
-  - Encode/decode through a new helper that wraps `encodeScenario` per slot (e.g. `?s1.currentAge=...&s2.currentAge=...`). Round-trip tested.
-  - State layer: either a small dedicated Zustand store for compare, or a local-state `useReducer` inside `<CompareView />`. Pick local-reducer if it stays under ~100 lines, otherwise hoist to a store.
-- UI:
-  - "Add scenario from /plan" entry: clicking the existing planner's compare CTA seeds the first scenario from `useScenarioStore.inputs`.
-  - For each saved scenario: a compact summary card (current age, contribution, SWR, target Traditional FIRE) and a Remove button.
-  - One overlaid `AreaChart` with one Area per scenario (color from `SCENARIO_PALETTE`). Reuse `projectPortfolio` per scenario; aligning x-axis on `age` is fine (mismatched currentAges shift the curve start — that's expected).
-  - "Clone current planner" button to add another scenario seeded from the live planner.
+- MDX dependency wiring:
+  - Add `@next/mdx`, `@mdx-js/loader`, `@mdx-js/react` (and any TS shims) to `package.json`.
+  - Update `next.config.ts` to register MDX (page extensions: `["ts", "tsx", "md", "mdx"]`) and configure remark/rehype plugins as needed (`remark-gfm` is a reasonable default).
+  - Add an `mdx-components.tsx` at the project root for shared MDX-rendered components (headings, code blocks, links). Use Tailwind prose-style classes.
+- `/learn` route at `src/app/learn/page.tsx`:
+  - Server component listing the variant explainers (Coast / Barista / Lean / Fat / Traditional / SWR / Fire-basics) in cards driven by `VARIANT_THEME` where applicable.
+  - Each card links to its `/learn/<slug>` page.
+- `/learn/fire-basics` MDX page (E1 must ship at least this one; the other variant pages can be empty stubs that say "coming soon" or land in E2 — keep this commit focused).
+  - Content covers: what FIRE is, the 4% rule one-liner, the five-variant spectrum, what `/plan` does. Pull copy from PRD §1, §3, §4.
+- Shared `/learn` layout (`src/app/learn/layout.tsx`) wrapping children in a `<article className="prose ...">` shell so MDX content renders with sensible typography.
 - Tests:
-  - Compare-URL encoder/decoder round trip with three scenarios.
-  - Adding/removing scenarios updates state correctly and is capped at 3.
-  - Each scenario card surfaces its labelled testid (e.g. `compare-scenario-card-1`).
+  - `/learn` index renders a card per planned variant (assert testids per slug, e.g. `learn-card-fire-basics`, `learn-card-coast-fire`).
+  - `/learn/fire-basics` renders the headline (RTL test importing the MDX directly — confirm this works under Vitest; if not, fall back to a Playwright smoke).
 
-Out of scope for D2:
+Out of scope for E1:
 
-- Authoring scenarios from scratch on `/plan/compare` — the only path to add a scenario is "clone current planner" (push to /plan, edit, send back). Free-form editing per slot can land in a follow-up.
-- MDX `/learn` content — E1.
+- Per-variant explainer copy (Coast / Barista / Lean / Fat / SWR) — E2.
+- SEO metadata / OG images — F1.
+- A11y audit — F2.
 
 ## Working tree notes
 
