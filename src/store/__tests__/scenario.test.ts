@@ -37,6 +37,23 @@ describe("useScenarioStore", () => {
     expect(after).not.toBe(before);
   });
 
+  it("applyInputs merges a partial into the current inputs", () => {
+    const { applyInputs } = useScenarioStore.getState();
+    applyInputs({ currentAge: 47, annualContribution: 55_000 });
+    const inputs = useScenarioStore.getState().inputs;
+    expect(inputs.currentAge).toBe(47);
+    expect(inputs.annualContribution).toBe(55_000);
+    expect(inputs.annualExpenses).toBe(DEFAULT_INPUTS.annualExpenses);
+  });
+
+  it("applyInputs ignores untouched fields rather than resetting them", () => {
+    const { setInput, applyInputs } = useScenarioStore.getState();
+    setInput("currentInvested", 250_000);
+    applyInputs({ currentAge: 33 });
+    expect(useScenarioStore.getState().inputs.currentInvested).toBe(250_000);
+    expect(useScenarioStore.getState().inputs.currentAge).toBe(33);
+  });
+
   it("resetInputs returns all fields to DEFAULT_INPUTS", () => {
     const { setInput, resetInputs } = useScenarioStore.getState();
     setInput("currentAge", 55);

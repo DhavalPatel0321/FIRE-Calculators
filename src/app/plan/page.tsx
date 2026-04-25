@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { GrowthChart } from "@/components/plan/growth-chart";
 import { InputPanel } from "@/components/plan/input-panel";
 import { ResultCards } from "@/components/plan/result-cards";
+import { ScenarioUrlSync } from "@/components/plan/scenario-url-sync";
 
 export const metadata: Metadata = {
   title: "Plan · FIRE Calculators",
@@ -16,6 +17,7 @@ export default function PlanPage() {
       data-testid="plan-page"
       className="px-6 py-12 text-slate-900"
     >
+      <ScenarioUrlSync />
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <header className="flex flex-col gap-2">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
