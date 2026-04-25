@@ -45,7 +45,7 @@ Current head when this tracker was added: `54378c1`
 ## Track D — Persistence & Comparison
 
 - [x] D1 `feat(url): URL-encoded scenario state + share button`
-- [ ] D2 `feat(compare): /plan/compare side-by-side scenario overlay`
+- [x] D2 `feat(compare): /plan/compare side-by-side scenario overlay`
 
 ## Track E — Content
 
