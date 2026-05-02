@@ -1,7 +1,9 @@
 # Claude Handoff
 
-Last updated: 2026-04-25
-Current stop point on `main`: `e3d9acd`
+Last updated: 2026-05-02
+Current stop point on `main`: `a441f1b` (last product commit: `e3d9acd`)
+
+> Verified on 2026-05-02 against the current tree: HEAD is `a441f1b`, working tree clean except for the two pre-existing untracked HTML files noted at the bottom, `next.config.ts` still has no MDX wiring, and the next required product commit is **E1**. The state described below is accurate.
 
 ## Read this first on resume
 

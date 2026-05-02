@@ -16,6 +16,7 @@ Current head when this tracker was added: `54378c1`
 
 - The checklist below tracks the required product-build commits only.
 - Separate documentation-only commits requested during implementation are useful breadcrumbs, but they do not replace any unchecked product item below.
+- An ad hoc pre-E1 quality-of-life sprint was inserted after D2 to fix route continuity and share-flow polish. It does not replace E1 and should not mark any Track E checkbox.
 
 ## Track A — Foundation
 
