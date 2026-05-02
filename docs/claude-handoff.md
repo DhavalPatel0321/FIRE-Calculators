@@ -1,9 +1,9 @@
 # Claude Handoff
 
 Last updated: 2026-05-02
-Current stop point on `main`: this F4 commit (last product commit: F4)
+Current stop point on `main`: this README update commit (last completed product commit: F4)
 
-> Verified on 2026-05-02 against the current tree: F4 is complete, local gates are green, and the next required product commit is **F5**. The state described below is accurate.
+> Verified on 2026-05-02 against the current tree: F4 is complete, local gates are green, README has been refreshed for the current app, and the next required product commit remains **F5**. Production deployment is blocked on Vercel authentication/linking in this local workspace.
 
 ## Read this first on resume
 
@@ -23,6 +23,7 @@ At the end of each session for this project, replace this file with a fresh hand
 - `/plan/compare` overlays up to 3 scenarios with their own slate/emerald/violet palette, hydrates from `?sN.*` URL params, and re-keys slots after removal.
 - The next required product commit is **F5**:
   `chore: deploy to Vercel (production) + README update`
+- `npx vercel whoami` found no existing credentials and started a device login flow, so production deploy could not be completed autonomously.
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
@@ -46,6 +47,7 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - this F2 commit `feat(a11y): improve planner accessibility`
 - this F3 commit `feat(analytics): add Vercel Analytics`
 - this F4 commit `test(e2e): add golden path smoke`
+- this README update commit `docs: refresh README for v1 app`
 
 Latest confirmed green GitHub Actions runs:
 
@@ -165,7 +167,7 @@ Implement exactly:
 Expected deliverables:
 
 - Deploy production to Vercel if the project is linked and credentials are available.
-- Update README with current setup, scripts, routes/features, and production URL if deployment succeeds.
+- README is already updated with current setup, scripts, routes/features, and deployment instructions. Add the production URL after deployment succeeds.
 - Tests:
   - Existing unit/type/build/lint gates stay green.
 

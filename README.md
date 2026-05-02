@@ -1,44 +1,87 @@
 # FIRE Calculators
 
-A suite of Financial Independence / Retire Early calculators: Traditional, Coast, Barista, Lean, and Fat FIRE — one shared input model, side-by-side results, and interactive charts.
+A deterministic Financial Independence / Retire Early planner for Traditional,
+Coast, Barista, Lean, and Fat FIRE. Users enter one financial profile and see
+all five targets, projected timelines, a shared growth chart, shareable scenario
+URLs, and side-by-side scenario comparison.
 
-**Status:** Planning (v1 spec ready, not yet scaffolded). See [PRD.md](./PRD.md) for the full product spec.
+## Current Status
 
-## Development model
+v1 implementation is complete through F4 of [docs/work-plan.md](./docs/work-plan.md):
 
-Dual-track development: v1 ships while v2 is being refined, and v2 ships while v3 is being refined.
+- Five FIRE variants from a shared input model.
+- URL persistence and share links.
+- Up to three scenario overlays on `/plan/compare`.
+- MDX learn pages for FIRE basics, each variant, and safe withdrawal rates.
+- SEO metadata, generated OG image, sitemap, and robots routes.
+- Vercel Analytics mounted in the App Router layout.
+- Playwright golden-path smoke test.
 
-- **v1** — deterministic MVP (5 calculators, shared inputs, growth chart, scenario comparison, public deploy).
-- **v2** — Monte Carlo simulation, Social Security, per-variant SWR defaults, variable expense timelines.
-- **v3** — accounts, historical-bootstrap MC, multi-asset allocation, tax-aware FIRE, account-type granularity.
+F5 deployment is pending Vercel authentication/linking in this local workspace.
 
-Full breakdown: see [`PRD.md` §10](./PRD.md).
+## Routes
 
----
+- `/` — landing page.
+- `/plan` — planner with inputs, results, and growth chart.
+- `/plan/compare` — side-by-side scenario comparison.
+- `/learn` — explainer index.
+- `/learn/fire-basics`
+- `/learn/traditional-fire`
+- `/learn/coast-fire`
+- `/learn/barista-fire`
+- `/learn/lean-fire`
+- `/learn/fat-fire`
+- `/learn/swr`
 
-## Planned stack
+Metadata routes:
 
-- Next.js 15 (App Router) + TypeScript
-- Tailwind CSS + shadcn/ui
-- Recharts for charts
-- Vitest for unit tests
-- Vercel for deployment
+- `/opengraph-image`
+- `/sitemap.xml`
+- `/robots.txt`
 
-## Next steps
+## Development
 
-1. Review and approve [PRD.md](./PRD.md).
-2. Initialize Next.js app: `npx create-next-app@latest . --typescript --tailwind --app --eslint`.
-3. Build out `src/lib/calc/` pure-math module first (TDD — formulas have well-known answers).
-4. Wire up the single-page planner UI.
+Install dependencies:
 
-## Structure
-
+```sh
+npm install
 ```
-FIRE-Calculators/
-├── PRD.md              ← start here
-├── README.md
-├── docs/
-│   ├── formulas.md     ← formula derivations + references
-│   └── monte-carlo.md  ← simulation methodology (v2)
-└── src/                ← Next.js app (not yet scaffolded)
+
+Run the local dev server:
+
+```sh
+npm run dev -- --hostname 127.0.0.1 --port 3309
 ```
+
+Run local checks:
+
+```sh
+npm run typecheck
+npm run test
+npm run test:e2e
+npm run build
+npm run lint
+```
+
+Playwright uses port `3309` to avoid stale local servers on `3000`.
+
+## Deployment
+
+The app targets Vercel. To deploy from a fresh local workspace:
+
+```sh
+npx vercel login
+npx vercel link
+npx vercel --prod
+```
+
+Set `NEXT_PUBLIC_SITE_URL` to the production URL so canonical metadata, OG URLs,
+sitemap entries, and robots output point at the deployed domain. Without that
+environment variable, the app falls back to `https://fire-calculators.vercel.app`.
+
+## Documentation
+
+- [PRD.md](./PRD.md) — product requirements and v1/v2/v3 scope.
+- [docs/work-plan.md](./docs/work-plan.md) — implementation checklist.
+- [docs/formulas.md](./docs/formulas.md) — formula derivations.
+- [docs/monte-carlo.md](./docs/monte-carlo.md) — deferred v2 simulation methodology.
