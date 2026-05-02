@@ -21,6 +21,7 @@ import {
 } from "@/components/plan/compare-state";
 import { Button } from "@/components/ui/button";
 import { calculateTraditionalFire, projectPortfolio } from "@/lib/calc";
+import { DEFAULT_INPUTS } from "@/lib/calc/defaults";
 import type { FireInputs } from "@/lib/calc/types";
 import {
   decodeCompareScenarios,
@@ -28,11 +29,12 @@ import {
   MAX_COMPARE_SCENARIOS,
   type CompareScenario,
 } from "@/lib/url/compare";
-import { decodeScenario } from "@/lib/url/scenario";
+import { decodeScenario, encodeScenario } from "@/lib/url/scenario";
 import { useScenarioStore } from "@/store/scenario";
 
 const URL_DEBOUNCE_MS = 150;
 const COMPARE_PATHNAME = "/plan/compare";
+const PLAN_PATHNAME = "/plan";
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -147,6 +149,12 @@ function ScenarioCard({
   );
 }
 
+function plannerHrefForInputs(inputs: FireInputs): string {
+  const params = encodeScenario(inputs);
+  const search = params.toString();
+  return `${PLAN_PATHNAME}${search ? `?${search}` : ""}`;
+}
+
 export function CompareView() {
   const plannerInputs = useScenarioStore((state) => state.inputs);
   const [state, dispatch] = useReducer(compareReducer, initialCompareState);
@@ -157,11 +165,24 @@ export function CompareView() {
   // Hydrate once from window.location.search on mount.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const initial = decodeCompareScenarios(
-      new URLSearchParams(window.location.search),
-    );
+    const params = new URLSearchParams(window.location.search);
+    const initial = decodeCompareScenarios(params);
     if (initial.length > 0) {
       dispatch({ type: "hydrate", scenarios: initial });
+    } else {
+      const plannerInputs = decodeScenario(params);
+      if (Object.keys(plannerInputs).length > 0) {
+        dispatch({
+          type: "hydrate",
+          scenarios: [
+            {
+              id: "s1",
+              label: "Current planner",
+              inputs: { ...DEFAULT_INPUTS, ...plannerInputs },
+            },
+          ],
+        });
+      }
     }
     hydratedRef.current = true;
     setHasMounted(true);
@@ -192,6 +213,10 @@ export function CompareView() {
   };
 
   const isFull = state.scenarios.length >= MAX_COMPARE_SCENARIOS;
+  const editHref =
+    state.scenarios.length > 0
+      ? plannerHrefForInputs(state.scenarios[0].inputs)
+      : PLAN_PATHNAME;
 
   return (
     <main
@@ -234,11 +259,11 @@ export function CompareView() {
                 Add current planner scenario
               </Button>
               <Link
-                href="/plan"
+                href={editHref}
                 data-testid="compare-edit-link"
                 className="text-xs font-medium text-slate-500 underline-offset-4 hover:text-slate-900 hover:underline"
               >
-                Edit on /plan →
+                Edit first scenario on /plan →
               </Link>
             </div>
           </div>

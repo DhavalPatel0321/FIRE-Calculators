@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { GrowthChart } from "@/components/plan/growth-chart";
 import { InputPanel } from "@/components/plan/input-panel";
+import { PlanCompareLink } from "@/components/plan/plan-compare-link";
 import { ResultCards } from "@/components/plan/result-cards";
 import { ScenarioUrlSync } from "@/components/plan/scenario-url-sync";
 
@@ -33,14 +33,7 @@ export default function PlanPage() {
               target, time to reach it, and the full projected growth curve.
             </p>
           </div>
-          <Link
-            href="/plan/compare"
-            data-testid="plan-compare-link"
-            className="inline-flex items-center gap-1 self-start rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:text-slate-900 sm:self-end"
-          >
-            Compare scenarios
-            <span aria-hidden="true">→</span>
-          </Link>
+          <PlanCompareLink />
         </header>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_1fr]">

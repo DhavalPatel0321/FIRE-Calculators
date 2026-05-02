@@ -101,6 +101,24 @@ describe("<CompareView />", () => {
     expect(second).toHaveTextContent("50");
   });
 
+  it("hydrates one scenario from unprefixed planner params for direct tab use", () => {
+    setSearch("?currentAge=44&annualContribution=60000");
+    render(<CompareView />);
+    const card = screen.getByTestId("compare-scenario-card-1");
+    expect(card).toHaveTextContent("Current planner");
+    expect(card).toHaveTextContent("44");
+    expect(card).toHaveTextContent("$60,000");
+  });
+
+  it("links back to /plan with the first scenario inputs", () => {
+    setSearch("?s1.currentAge=40&s1.annualContribution=45000");
+    render(<CompareView />);
+    const href = screen.getByTestId("compare-edit-link").getAttribute("href");
+    expect(href).toContain("/plan?");
+    expect(href).toContain("currentAge=40");
+    expect(href).toContain("annualContribution=45000");
+  });
+
   it("debounces URL replaceState after a scenario is added", () => {
     render(<CompareView />);
     const replaceSpy = vi.spyOn(window.history, "replaceState");

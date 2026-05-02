@@ -46,6 +46,13 @@ export default function LandingPage() {
               <span aria-hidden="true">→</span>
             </Link>
             <Link
+              href="/plan/compare"
+              data-testid="landing-cta-compare"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:text-slate-900"
+            >
+              Compare scenarios
+            </Link>
+            <Link
               href="/learn"
               data-testid="landing-cta-secondary"
               className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-300 hover:text-slate-900"
@@ -125,6 +132,10 @@ export default function LandingPage() {
               </li>
             ))}
           </ul>
+          <p className="text-xs leading-5 text-slate-500">
+            Note: the Learn section is a temporary placeholder until the next
+            content sprint adds the MDX explainers.
+          </p>
         </div>
       </section>
 
