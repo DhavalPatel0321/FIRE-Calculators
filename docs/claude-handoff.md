@@ -1,9 +1,9 @@
 # Claude Handoff
 
 Last updated: 2026-05-02
-Current stop point on `main`: this F3 commit (last product commit: F3)
+Current stop point on `main`: this F4 commit (last product commit: F4)
 
-> Verified on 2026-05-02 against the current tree: F3 is complete, local gates are green, and the next required product commit is **F4**. The state described below is accurate.
+> Verified on 2026-05-02 against the current tree: F4 is complete, local gates are green, and the next required product commit is **F5**. The state described below is accurate.
 
 ## Read this first on resume
 
@@ -21,9 +21,8 @@ At the end of each session for this project, replace this file with a fresh hand
 - Track A (Foundation), Track B (Calc core), Track C (Planner UI), and Track D (Persistence + Compare) are complete.
 - `/plan` hydrates from URL, debounces store-driven URL updates via `history.replaceState`, has a Copy-share-URL button, formats $ amounts with comma separators, and links to `/plan/compare`.
 - `/plan/compare` overlays up to 3 scenarios with their own slate/emerald/violet palette, hydrates from `?sN.*` URL params, and re-keys slots after removal.
-- The next required product commit is **F4**:
-  `test(e2e): Playwright golden-path smoke test`
-- Do not start F5 until F4 is committed, pushed, and CI is green.
+- The next required product commit is **F5**:
+  `chore: deploy to Vercel (production) + README update`
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
@@ -32,8 +31,8 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - C1-C5: complete
 - D1, D2: complete
 - E1-E2: complete
-- F1-F3: complete
-- F4-F5: not started
+- F1-F4: complete
+- F5: not started
 
 ## Latest pushed commits
 
@@ -46,6 +45,7 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - this F1 commit `feat(seo): add metadata routes and OG image`
 - this F2 commit `feat(a11y): improve planner accessibility`
 - this F3 commit `feat(analytics): add Vercel Analytics`
+- this F4 commit `test(e2e): add golden path smoke`
 
 Latest confirmed green GitHub Actions runs:
 
@@ -58,6 +58,7 @@ Latest confirmed green GitHub Actions runs:
 - Next.js 15 App Router + Tailwind + shadcn/ui. Fonts via `next/font`.
 - Vercel Analytics is mounted in the root layout via `@vercel/analytics/next`.
 - Vitest (with `@vitejs/plugin-react` for TSX tests), Playwright, GitHub Actions workflow.
+- Playwright golden path lives at `e2e/golden-path.spec.ts`; config uses local port 3309 to avoid stale dev-server conflicts on 3000.
 - Pure calc module under [src/lib/calc](/Users/dhavalpatel/projects/FIRE-Calculators/src/lib/calc:1):
   - types, defaults, SWR presets, solver, all variants, projection, scenario aggregator, reference scenarios.
   - Entry points: `computeAllVariants(inputs)`, `projectPortfolio(inputs, years)`, plus per-variant exports.
@@ -141,36 +142,36 @@ export PATH="$(dirname "$NODE20"):$PATH"
 - TSX component tests run under Vitest via `@vitejs/plugin-react`. React Testing Library + jsdom works.
 - For Recharts tests, mock `ResponsiveContainer` with a sized div. The same mock pattern works for `<CompareView />`.
 - For `<ScenarioUrlSync />` and `<CompareView />` tests, `vi.useFakeTimers()` is required because the URL update is debounced. Use `window.history.replaceState` to seed the URL before mount.
-- Last local verification (after F3):
+- Last local verification (after F4):
   - `npx vitest run` — 26 files / 130 tests passing
+  - `npm run test:e2e` — 1 Chromium test passing
   - `npm run typecheck`
   - `npm run build` — `/plan` 280 kB, `/plan/compare` 278 kB
   - `npm run lint`
 - Vitest coverage config still only tracks `src/lib/calc/**`.
 
-## Files to inspect before starting F4
+## Files to inspect before starting F5
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
-- [playwright.config.ts](/Users/dhavalpatel/projects/FIRE-Calculators/playwright.config.ts:1)
-- [src/app/plan/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/plan/page.tsx:1), [src/components/plan/input-panel.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/input-panel.tsx:1), [src/components/plan/compare-view.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/compare-view.tsx:1) — golden path selectors
+- [README.md](/Users/dhavalpatel/projects/FIRE-Calculators/README.md:1)
+- Vercel project/link status via `vercel` CLI if available
 
-## F4 restart brief
+## F5 restart brief
 
 Implement exactly:
 
-`test(e2e): Playwright golden-path smoke test`
+`chore: deploy to Vercel (production) + README update`
 
 Expected deliverables:
 
-- Add a Playwright smoke that covers the public golden path: landing -> planner, edit at least one input, copy/share URL or compare link, compare page hydration, learn page navigation.
-- Use stable data-testids already documented.
+- Deploy production to Vercel if the project is linked and credentials are available.
+- Update README with current setup, scripts, routes/features, and production URL if deployment succeeds.
 - Tests:
-  - `npm run test:e2e` should pass locally.
   - Existing unit/type/build/lint gates stay green.
 
-Out of scope for F4:
+Out of scope for F5:
 
-- Deployment / README update — F5.
+- New product features beyond the v1 checklist.
 
 ## Working tree notes
 

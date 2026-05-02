@@ -58,5 +58,5 @@ Current head when this tracker was added: `54378c1`
 - [x] F1 `feat(seo): metadata, OG images, sitemap, robots.txt`
 - [x] F2 `feat(a11y): keyboard nav, labels, focus, contrast audit`
 - [x] F3 `feat(analytics): Vercel Analytics`
-- [ ] F4 `test(e2e): Playwright golden-path smoke test`
+- [x] F4 `test(e2e): Playwright golden-path smoke test`
 - [ ] F5 `chore: deploy to Vercel (production) + README update`
