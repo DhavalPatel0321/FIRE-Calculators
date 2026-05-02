@@ -1,9 +1,9 @@
 # Claude Handoff
 
 Last updated: 2026-05-02
-Current stop point on `main`: this E1 commit (last product commit: E1)
+Current stop point on `main`: this E2 commit (last product commit: E2)
 
-> Verified on 2026-05-02 against the current tree: E1 is complete, local gates are green, and the next required product commit is **E2**. The state described below is accurate.
+> Verified on 2026-05-02 against the current tree: E2 is complete, local gates are green, and the next required product commit is **F1**. The state described below is accurate.
 
 ## Read this first on resume
 
@@ -11,7 +11,7 @@ Current stop point on `main`: this E1 commit (last product commit: E1)
 2. Read [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1).
 3. Re-read the v1-authoritative parts of [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1):
    - §4.2 v1 features (`/learn/*` MDX explainers)
-   - §6.6 SWR explainer copy (canonical source for the SWR `/learn` page)
+   - §6.6 SWR explainer copy
    - §10 v1 scope
 
 At the end of each session for this project, replace this file with a fresh handoff that matches the latest pushed commit and next unchecked work-plan item.
@@ -21,9 +21,9 @@ At the end of each session for this project, replace this file with a fresh hand
 - Track A (Foundation), Track B (Calc core), Track C (Planner UI), and Track D (Persistence + Compare) are complete.
 - `/plan` hydrates from URL, debounces store-driven URL updates via `history.replaceState`, has a Copy-share-URL button, formats $ amounts with comma separators, and links to `/plan/compare`.
 - `/plan/compare` overlays up to 3 scenarios with their own slate/emerald/violet palette, hydrates from `?sN.*` URL params, and re-keys slots after removal.
-- The next required product commit is **E2**:
-  `feat(content): per-variant and SWR explainer pages`
-- Do not start F1 until E2 is committed, pushed, and CI is green.
+- The next required product commit is **F1**:
+  `feat(seo): metadata, OG images, sitemap, robots.txt`
+- Do not start F2 until F1 is committed, pushed, and CI is green.
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
@@ -31,8 +31,8 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - B1-B8: complete
 - C1-C5: complete
 - D1, D2: complete
-- E1: complete
-- E2-F5: not started
+- E1-E2: complete
+- F1-F5: not started
 
 ## Latest pushed commits
 
@@ -41,6 +41,7 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - `e3d9acd` `feat(compare): /plan/compare side-by-side scenario overlay`
 - `bfe4592` `fix(nav): improve compare and learn route continuity`
 - this E1 commit `feat(content): add MDX learn basics`
+- this E2 commit `feat(content): add FIRE variant explainers`
 
 Latest confirmed green GitHub Actions runs:
 
@@ -64,8 +65,8 @@ Latest confirmed green GitHub Actions runs:
   - `/plan` — planner (inputs + result cards + growth chart). Mounts `<ScenarioUrlSync />` for URL hydration / replaceState. Header has a "Compare scenarios" CTA.
   - `/plan/compare` — server shell mounting `<CompareView />` (client). Up to 3 scenarios via `useReducer` (`compareReducer` + `initialCompareState`), URL-synced through `compare.ts`.
 - `/learn` — MDX-backed learn index listing FIRE basics, Traditional, Coast, Barista, Lean, Fat, and SWR explainers.
-- `/learn/fire-basics` — first MDX explainer page covering FIRE basics, the 4% rule, the five-variant spectrum, and what `/plan` does.
-- `/learn/[slug]` — temporary "coming next" stubs for variant and SWR pages until E2.
+- `/learn/fire-basics` — MDX explainer page covering FIRE basics, the 4% rule, the five-variant spectrum, and what `/plan` does.
+- `/learn/traditional-fire`, `/learn/coast-fire`, `/learn/barista-fire`, `/learn/lean-fire`, `/learn/fat-fire`, `/learn/swr` — MDX explainer pages aligned to the v1 formulas and SWR guidance.
 - Site chrome at [src/components/site](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/site:1) (`SiteHeader`, `SiteFooter`), mounted in [src/app/layout.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/layout.tsx:1).
 - Planner components at [src/components/plan](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan:1):
   - `InputPanel` — Personal/Financial/Assumptions/Advanced. `<NumberField />` is a draft-aware text input (`type="text"`) that displays thousands separators via `formatNumberDisplay` and sanitizes via `sanitizeNumberInput`. **Don't revert to `type="number"`** — that's what allowed the leading-zero bug.
@@ -134,40 +135,40 @@ export PATH="$(dirname "$NODE20"):$PATH"
 - TSX component tests run under Vitest via `@vitejs/plugin-react`. React Testing Library + jsdom works.
 - For Recharts tests, mock `ResponsiveContainer` with a sized div. The same mock pattern works for `<CompareView />`.
 - For `<ScenarioUrlSync />` and `<CompareView />` tests, `vi.useFakeTimers()` is required because the URL update is debounced. Use `window.history.replaceState` to seed the URL before mount.
-- Last local verification (after E1):
-  - `npx vitest run` — 25 files / 121 tests passing
+- Last local verification (after E2):
+  - `npx vitest run` — 25 files / 127 tests passing
   - `npm run typecheck`
-  - `npm run build` — `/` 161 kB, `/learn` 161 kB, `/learn/fire-basics` 161 kB, `/plan` 288 kB, `/plan/compare` 278 kB
+  - `npm run build` — `/` 161 kB, `/learn/*` 161 kB, `/plan` 288 kB, `/plan/compare` 278 kB
   - `npm run lint`
 - Vitest coverage config still only tracks `src/lib/calc/**`.
 
-## Files to inspect before starting E2
+## Files to inspect before starting F1
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
-- [PRD.md](/Users/dhavalpatel/projects/FIRE-Calculators/PRD.md:1) §4.1, §4.2, and §6.6 (SWR explainer table is the canonical source for `/learn/swr` rows)
-- [src/app/learn/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/learn/page.tsx:1) — card list and slugs for planned explainers
-- [src/app/learn/[slug]/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/learn/[slug]/page.tsx:1) — replace stubs with real pages during E2
-- [src/components/plan/variant-theme.ts](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/variant-theme.ts:1) — reuse `VARIANT_THEME` for variant explainer accents
+- [src/app/layout.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/layout.tsx:1) — root metadata lives here today
+- [src/app/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/page.tsx:1), [src/app/plan/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/plan/page.tsx:1), and learn route pages — add route metadata where useful
+- [next.config.ts](/Users/dhavalpatel/projects/FIRE-Calculators/next.config.ts:1) — confirm config if adding image or metadata behavior
 
-## E2 restart brief
+## F1 restart brief
 
 Implement exactly:
 
-`feat(content): per-variant and SWR explainer pages`
+`feat(seo): metadata, OG images, sitemap, robots.txt`
 
 Expected deliverables:
 
-- Replace the `/learn/[slug]` temporary stubs with real MDX explainer pages for Traditional, Coast, Barista, Lean, Fat, and SWR.
-- Keep content aligned with `PRD.md` v1 scope. Do not introduce Monte Carlo, tax, Social Security, account-specific, or v2/v3 content beyond clearly labeling it out of scope.
-- Use `PRD.md` §6.6 as the canonical SWR table source.
+- Add useful root and route-level metadata for landing, planner, compare, learn, and explainer pages.
+- Add OG image support. Prefer a generated static image route or simple committed static asset that works in `next build`.
+- Add `src/app/sitemap.ts` covering all public v1 routes.
+- Add `src/app/robots.ts`.
 - Tests:
-  - `/learn` index still renders a card per planned explainer.
-  - Each new explainer renders its headline and at least one canonical concept/formula.
+  - Metadata routes return the expected public routes and robots policy.
+  - Keep route render tests green.
 
-Out of scope for E2:
+Out of scope for F1:
 
-- SEO metadata / OG images — F1.
 - A11y audit — F2.
+- Analytics — F3.
 
 ## Working tree notes
 

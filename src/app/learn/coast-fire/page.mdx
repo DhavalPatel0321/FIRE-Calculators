@@ -1,0 +1,27 @@
+import Link from "next/link";
+
+export const metadata = {
+  title: "Coast FIRE · FIRE Calculators",
+  description:
+    "Coast FIRE formula, assumptions, and how compounding can carry a portfolio to FI.",
+};
+
+# Coast FIRE
+
+Coast FIRE asks how much needs to be invested today so that, with no further contributions, compound growth can reach the Traditional FIRE number by the target retirement age.
+
+The v1 formula is:
+
+`coastNumber = fireNumber / (1 + expectedRealReturn)^(targetRetirementAge - currentAge)`
+
+If current invested assets are already above that number, the scenario has reached Coast FIRE. If not, the planner estimates how many more years of contributions are needed before the portfolio can coast.
+
+## Why it is useful
+
+Coast FIRE separates financial independence into two milestones. The first milestone is "I no longer need to save for retirement." The second milestone is "I can fully retire." That distinction helps people who want to downshift, change careers, start a business, or prioritize flexibility before reaching a full Traditional FIRE target.
+
+## What drives the result
+
+Coast FIRE is highly sensitive to time and expected real return. A younger current age, later target retirement age, or higher expected real return lowers the amount needed today. Higher annual expenses or a lower safe withdrawal rate raise the final FIRE number, which raises the Coast FIRE target too.
+
+Use <Link href="/plan">the planner</Link> to compare Coast FIRE against the full FIRE target with the same inputs.

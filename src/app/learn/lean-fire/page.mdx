@@ -1,0 +1,27 @@
+import Link from "next/link";
+
+export const metadata = {
+  title: "Lean FIRE · FIRE Calculators",
+  description:
+    "Lean FIRE formula, assumptions, and how lower spending changes the FIRE target.",
+};
+
+# Lean FIRE
+
+Lean FIRE is Traditional FIRE with a lower annual spending assumption. In v1, the default Lean expense level is **$35,000 per year**, and the same safe withdrawal rate input is used across all variants.
+
+The v1 formula is:
+
+`leanFireNumber = leanExpenses / safeWithdrawalRate`
+
+At the 4% default safe withdrawal rate, the $35,000 default creates an $875,000 Lean FIRE target.
+
+## When it fits
+
+Lean FIRE is useful when a lower-cost lifestyle is a deliberate goal rather than a temporary constraint. It can represent geographic arbitrage, simpler housing, lower discretionary spending, or a plan where flexibility matters more than a high annual budget.
+
+## What to watch
+
+Lower spending targets leave less room for shocks. Housing, healthcare, family support, travel, or inflation surprises can matter more when the annual budget is tight. In v1, Lean FIRE remains deterministic and does not model taxes, healthcare subsidies, or spending volatility.
+
+Use <Link href="/plan">the planner</Link> to edit the Lean expense override and compare it with Traditional and Fat FIRE.

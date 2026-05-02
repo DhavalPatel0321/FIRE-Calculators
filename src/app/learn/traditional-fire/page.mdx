@@ -1,0 +1,33 @@
+import Link from "next/link";
+
+export const metadata = {
+  title: "Traditional FIRE · FIRE Calculators",
+  description:
+    "Traditional FIRE formula, assumptions, and when the full-retirement target makes sense.",
+};
+
+# Traditional FIRE
+
+Traditional FIRE answers the baseline question: what portfolio can cover retirement spending without needing employment income?
+
+The v1 formula is:
+
+`fireNumber = annualExpenses / safeWithdrawalRate`
+
+At the 4% default safe withdrawal rate, this is the familiar **25x annual expenses** target. Spending $40,000 per year points to a $1,000,000 target; spending $80,000 points to $2,000,000.
+
+## How time to FIRE is estimated
+
+The planner solves for the year when current invested assets plus annual contributions, grown at the expected real return, reach the FIRE number:
+
+`currentInvested * (1 + r)^t + annualContribution * (((1 + r)^t - 1) / r) = fireNumber`
+
+That result is deterministic. It changes immediately when you adjust spending, savings, expected return, or the safe withdrawal rate in <Link href="/plan">the planner</Link>.
+
+## When it fits
+
+Traditional FIRE is the cleanest model when you want work to be fully optional and do not want part-time income to be required in retirement. It is also the anchor for comparing the other FIRE variants because Coast, Barista, Lean, and Fat FIRE all modify one part of the same core question.
+
+## v1 limits
+
+The v1 calculation does not model taxes, account types, Social Security, pensions, healthcare subsidies, or market sequence risk. Use the result as a planning target, not a guarantee.

@@ -1,0 +1,27 @@
+import Link from "next/link";
+
+export const metadata = {
+  title: "Barista FIRE · FIRE Calculators",
+  description:
+    "Barista FIRE formula, assumptions, and how part-time income reduces the portfolio target.",
+};
+
+# Barista FIRE
+
+Barista FIRE models a retirement where part-time work, consulting, or other earned income covers part of annual spending. The portfolio only needs to cover the remaining gap.
+
+The v1 formula is:
+
+`baristaFireNumber = (annualExpenses - partTimeIncome) / safeWithdrawalRate`
+
+At a 4% safe withdrawal rate, $60,000 of annual expenses with $20,000 of part-time income creates a $1,000,000 Barista FIRE target because the portfolio needs to support only the $40,000 gap.
+
+## When it fits
+
+Barista FIRE can fit people who want to leave a demanding career before they are ready for full retirement. It is also useful for testing how much a side business, consulting stream, or lower-stress job could reduce the portfolio target.
+
+## What to watch
+
+The math assumes the part-time income is reliable in real dollars. If that income is uncertain, temporary, or comes with large tax or healthcare effects, the deterministic v1 target can look more stable than reality.
+
+Use <Link href="/plan">the planner</Link> to change part-time income and see how quickly the Barista target moves.

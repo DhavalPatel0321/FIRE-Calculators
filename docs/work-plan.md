@@ -51,7 +51,7 @@ Current head when this tracker was added: `54378c1`
 ## Track E — Content
 
 - [x] E1 `feat(content): MDX setup + /learn layout + fire-basics`
-- [ ] E2 `feat(content): per-variant and SWR explainer pages`
+- [x] E2 `feat(content): per-variant and SWR explainer pages`
 
 ## Track F — Polish & Ship
 

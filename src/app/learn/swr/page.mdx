@@ -1,0 +1,33 @@
+import Link from "next/link";
+
+export const metadata = {
+  title: "Safe withdrawal rates · FIRE Calculators",
+  description:
+    "Safe withdrawal rate alternatives and why the SWR assumption drives FIRE targets.",
+};
+
+# Safe withdrawal rates
+
+The safe withdrawal rate is the percentage of a portfolio used to estimate sustainable first-year retirement spending. In the planner, it is the denominator in the core FIRE target:
+
+`fireNumber = annualExpenses / safeWithdrawalRate`
+
+The 4% default is the industry-standard starting point, but SWR is one of the most consequential assumptions in FIRE planning. A one percentage point shift changes the target portfolio by roughly 25%.
+
+## Common SWR choices
+
+| SWR | Implied portfolio multiple | When this value makes sense | Source |
+| --- | --- | --- | --- |
+| 3.0% | 33.3x expenses | Very conservative. Appropriate for 50+ year horizons, low-return environments, or users who want near-certainty of not running out. | Common safety-margin guidance for young FIRE seekers |
+| 3.3% | 30.3x expenses | Often cited for early retirees with 40+ year horizons. | ERN Safe Withdrawal Rate series |
+| 3.5% | 28.6x expenses | Morningstar's 2026 base case for a 30-year retirement with a 30-50% equity allocation. | Morningstar 2026 SWR study |
+| 3.9% | 25.6x expenses | Morningstar's 2026 base case for a stock-heavy 30-year retirement. | Morningstar 2026 SWR study |
+| 4.0% | 25.0x expenses | Default. Trinity Study / Bengen 1994, historically successful for 30-year retirements with a balanced allocation. | Trinity Study 1998 |
+| 4.5% | 22.2x expenses | Upper end of reasonable; generally requires flexible withdrawals. | Bengen later research |
+| 4.7% | 21.3x expenses | Bengen's updated research suggests this was historically safe for 30-year horizons with a broader asset mix. | Bengen updated |
+
+## Why v1 uses one SWR
+
+v1 uses the same safe withdrawal rate input for Traditional, Coast, Barista, Lean, and Fat FIRE. That keeps every result tied to one visible assumption and makes scenario comparison easier.
+
+Users targeting very long retirements, unusually high spending, or a lower-risk portfolio can manually lower the SWR slider in <Link href="/plan">the planner</Link>. Per-variant SWR defaults and horizon-aware suggestions are planned for a later version, not v1.
