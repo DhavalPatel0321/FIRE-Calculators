@@ -83,5 +83,6 @@ environment variable, the app falls back to `https://fire-calculators.vercel.app
 
 - [PRD.md](./PRD.md) — product requirements and v1/v2/v3 scope.
 - [docs/work-plan.md](./docs/work-plan.md) — implementation checklist.
+- [docs/deployment-prep-plan.md](./docs/deployment-prep-plan.md) — F5 deployment prep runbook.
 - [docs/formulas.md](./docs/formulas.md) — formula derivations.
 - [docs/monte-carlo.md](./docs/monte-carlo.md) — deferred v2 simulation methodology.

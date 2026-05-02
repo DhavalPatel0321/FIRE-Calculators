@@ -1,9 +1,9 @@
 # Claude Handoff
 
 Last updated: 2026-05-02
-Current stop point on `main`: this README update commit (last completed product commit: F4)
+Current stop point on `main`: deployment-prep docs commit (last completed product commit: F4)
 
-> Verified on 2026-05-02 against the current tree: F4 is complete, local gates are green, README has been refreshed for the current app, and the next required product commit remains **F5**. Production deployment is blocked on Vercel authentication/linking in this local workspace.
+> Verified on 2026-05-02 against the current tree: F4 is complete, local gates are green, README has been refreshed for the current app, a deployment prep runbook now exists, and the next required product commit remains **F5**. Production deployment is blocked on Vercel authentication/linking in this local workspace.
 
 ## Read this first on resume
 
@@ -13,6 +13,7 @@ Current stop point on `main`: this README update commit (last completed product 
    - §4.2 v1 features (`/learn/*` MDX explainers)
    - §6.6 SWR explainer copy
    - §10 v1 scope
+4. Read [docs/deployment-prep-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/deployment-prep-plan.md:1) before attempting F5.
 
 At the end of each session for this project, replace this file with a fresh handoff that matches the latest pushed commit and next unchecked work-plan item.
 
@@ -24,6 +25,7 @@ At the end of each session for this project, replace this file with a fresh hand
 - The next required product commit is **F5**:
   `chore: deploy to Vercel (production) + README update`
 - `npx vercel whoami` found no existing credentials and started a device login flow, so production deploy could not be completed autonomously.
+- Deployment prep steps are documented in [docs/deployment-prep-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/deployment-prep-plan.md:1).
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
@@ -48,6 +50,7 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - this F3 commit `feat(analytics): add Vercel Analytics`
 - this F4 commit `test(e2e): add golden path smoke`
 - this README update commit `docs: refresh README for v1 app`
+- this deployment-prep docs commit `docs: add deployment prep plan`
 
 Latest confirmed green GitHub Actions runs:
 
@@ -156,6 +159,7 @@ export PATH="$(dirname "$NODE20"):$PATH"
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
 - [README.md](/Users/dhavalpatel/projects/FIRE-Calculators/README.md:1)
+- [docs/deployment-prep-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/deployment-prep-plan.md:1)
 - Vercel project/link status via `vercel` CLI if available
 
 ## F5 restart brief
@@ -168,6 +172,7 @@ Expected deliverables:
 
 - Deploy production to Vercel if the project is linked and credentials are available.
 - README is already updated with current setup, scripts, routes/features, and deployment instructions. Add the production URL after deployment succeeds.
+- Follow [docs/deployment-prep-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/deployment-prep-plan.md:1) as the runbook for linking, preview verification, rollout, and post-deploy checks.
 - Tests:
   - Existing unit/type/build/lint gates stay green.
 
