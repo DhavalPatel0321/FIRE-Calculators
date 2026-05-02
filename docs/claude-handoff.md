@@ -1,9 +1,9 @@
 # Claude Handoff
 
 Last updated: 2026-05-02
-Current stop point on `main`: this E2 commit (last product commit: E2)
+Current stop point on `main`: this F1 commit (last product commit: F1)
 
-> Verified on 2026-05-02 against the current tree: E2 is complete, local gates are green, and the next required product commit is **F1**. The state described below is accurate.
+> Verified on 2026-05-02 against the current tree: F1 is complete, local gates are green, and the next required product commit is **F2**. The state described below is accurate.
 
 ## Read this first on resume
 
@@ -21,9 +21,9 @@ At the end of each session for this project, replace this file with a fresh hand
 - Track A (Foundation), Track B (Calc core), Track C (Planner UI), and Track D (Persistence + Compare) are complete.
 - `/plan` hydrates from URL, debounces store-driven URL updates via `history.replaceState`, has a Copy-share-URL button, formats $ amounts with comma separators, and links to `/plan/compare`.
 - `/plan/compare` overlays up to 3 scenarios with their own slate/emerald/violet palette, hydrates from `?sN.*` URL params, and re-keys slots after removal.
-- The next required product commit is **F1**:
-  `feat(seo): metadata, OG images, sitemap, robots.txt`
-- Do not start F2 until F1 is committed, pushed, and CI is green.
+- The next required product commit is **F2**:
+  `feat(a11y): keyboard nav, labels, focus, contrast audit`
+- Do not start F3 until F2 is committed, pushed, and CI is green.
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
@@ -32,7 +32,8 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - C1-C5: complete
 - D1, D2: complete
 - E1-E2: complete
-- F1-F5: not started
+- F1: complete
+- F2-F5: not started
 
 ## Latest pushed commits
 
@@ -42,6 +43,7 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - `bfe4592` `fix(nav): improve compare and learn route continuity`
 - this E1 commit `feat(content): add MDX learn basics`
 - this E2 commit `feat(content): add FIRE variant explainers`
+- this F1 commit `feat(seo): add metadata routes and OG image`
 
 Latest confirmed green GitHub Actions runs:
 
@@ -67,6 +69,7 @@ Latest confirmed green GitHub Actions runs:
 - `/learn` — MDX-backed learn index listing FIRE basics, Traditional, Coast, Barista, Lean, Fat, and SWR explainers.
 - `/learn/fire-basics` — MDX explainer page covering FIRE basics, the 4% rule, the five-variant spectrum, and what `/plan` does.
 - `/learn/traditional-fire`, `/learn/coast-fire`, `/learn/barista-fire`, `/learn/lean-fire`, `/learn/fat-fire`, `/learn/swr` — MDX explainer pages aligned to the v1 formulas and SWR guidance.
+- `/opengraph-image`, `/sitemap.xml`, `/robots.txt` — metadata routes for social previews and indexing.
 - Site chrome at [src/components/site](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/site:1) (`SiteHeader`, `SiteFooter`), mounted in [src/app/layout.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/layout.tsx:1).
 - Planner components at [src/components/plan](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan:1):
   - `InputPanel` — Personal/Financial/Assumptions/Advanced. `<NumberField />` is a draft-aware text input (`type="text"`) that displays thousands separators via `formatNumberDisplay` and sanitizes via `sanitizeNumberInput`. **Don't revert to `type="number"`** — that's what allowed the leading-zero bug.
@@ -135,40 +138,40 @@ export PATH="$(dirname "$NODE20"):$PATH"
 - TSX component tests run under Vitest via `@vitejs/plugin-react`. React Testing Library + jsdom works.
 - For Recharts tests, mock `ResponsiveContainer` with a sized div. The same mock pattern works for `<CompareView />`.
 - For `<ScenarioUrlSync />` and `<CompareView />` tests, `vi.useFakeTimers()` is required because the URL update is debounced. Use `window.history.replaceState` to seed the URL before mount.
-- Last local verification (after E2):
-  - `npx vitest run` — 25 files / 127 tests passing
+- Last local verification (after F1):
+  - `npx vitest run` — 26 files / 129 tests passing
   - `npm run typecheck`
-  - `npm run build` — `/` 161 kB, `/learn/*` 161 kB, `/plan` 288 kB, `/plan/compare` 278 kB
+  - `npm run build` — includes `/opengraph-image`, `/robots.txt`, `/sitemap.xml`
   - `npm run lint`
 - Vitest coverage config still only tracks `src/lib/calc/**`.
 
-## Files to inspect before starting F1
+## Files to inspect before starting F2
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
-- [src/app/layout.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/layout.tsx:1) — root metadata lives here today
-- [src/app/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/page.tsx:1), [src/app/plan/page.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/plan/page.tsx:1), and learn route pages — add route metadata where useful
-- [next.config.ts](/Users/dhavalpatel/projects/FIRE-Calculators/next.config.ts:1) — confirm config if adding image or metadata behavior
+- [src/components/site/site-header.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/site/site-header.tsx:1) — keyboard/focus nav behavior
+- [src/components/plan/input-panel.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/input-panel.tsx:1) — form labels, input semantics, slider labels
+- [src/components/plan/result-cards.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/result-cards.tsx:1), [src/components/plan/growth-chart.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/growth-chart.tsx:1), and compare components — labels/focus/contrast
 
-## F1 restart brief
+## F2 restart brief
 
 Implement exactly:
 
-`feat(seo): metadata, OG images, sitemap, robots.txt`
+`feat(a11y): keyboard nav, labels, focus, contrast audit`
 
 Expected deliverables:
 
-- Add useful root and route-level metadata for landing, planner, compare, learn, and explainer pages.
-- Add OG image support. Prefer a generated static image route or simple committed static asset that works in `next build`.
-- Add `src/app/sitemap.ts` covering all public v1 routes.
-- Add `src/app/robots.ts`.
+- Audit keyboard navigation and focus-visible states across header, planner inputs, chart toggles, copy/share, compare controls, and learn links.
+- Ensure inputs and sliders have robust accessible names/labels.
+- Check color contrast for small text, badges, buttons, and chart controls; adjust low-contrast classes.
+- Add focused tests where practical for accessible names or keyboard-triggered controls.
 - Tests:
-  - Metadata routes return the expected public routes and robots policy.
-  - Keep route render tests green.
+  - Keep route render/component tests green.
+  - Add assertions for any a11y semantics changed in F2.
 
-Out of scope for F1:
+Out of scope for F2:
 
-- A11y audit — F2.
 - Analytics — F3.
+- Playwright golden path — F4.
 
 ## Working tree notes
 

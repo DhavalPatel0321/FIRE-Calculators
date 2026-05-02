@@ -5,11 +5,21 @@ import { InputPanel } from "@/components/plan/input-panel";
 import { PlanCompareLink } from "@/components/plan/plan-compare-link";
 import { ResultCards } from "@/components/plan/result-cards";
 import { ScenarioUrlSync } from "@/components/plan/scenario-url-sync";
+import { absoluteUrl } from "@/app/seo";
 
 export const metadata: Metadata = {
-  title: "Plan · FIRE Calculators",
+  title: "Plan",
   description:
     "Enter your financial picture once and see Traditional, Coast, Barista, Lean, and Fat FIRE side-by-side.",
+  alternates: {
+    canonical: absoluteUrl("/plan"),
+  },
+  openGraph: {
+    title: "Plan · FIRE Calculators",
+    description:
+      "Enter your financial picture once and see every FIRE variant side-by-side.",
+    url: absoluteUrl("/plan"),
+  },
 };
 
 export default function PlanPage() {

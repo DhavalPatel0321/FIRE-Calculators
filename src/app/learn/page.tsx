@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { absoluteUrl } from "@/app/seo";
 import { VARIANT_ORDER, VARIANT_THEME } from "@/components/plan/variant-theme";
 import type { FireVariant } from "@/lib/calc/types";
 
@@ -33,9 +34,18 @@ const LEARN_CARDS: LearnCard[] = [
 ];
 
 export const metadata: Metadata = {
-  title: "Learn · FIRE Calculators",
+  title: "Learn",
   description:
     "Educational FIRE explainers for FIRE basics, variants, and safe withdrawal rates.",
+  alternates: {
+    canonical: absoluteUrl("/learn"),
+  },
+  openGraph: {
+    title: "Learn · FIRE Calculators",
+    description:
+      "Educational FIRE explainers for FIRE basics, variants, and safe withdrawal rates.",
+    url: absoluteUrl("/learn"),
+  },
 };
 
 export default function LearnPage() {

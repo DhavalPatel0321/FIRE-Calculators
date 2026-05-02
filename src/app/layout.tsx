@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SITE_NAME, SITE_URL, absoluteUrl } from "@/app/seo";
 
 import "./globals.css";
 
@@ -18,8 +19,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FIRE Calculators",
-  description: "Deterministic FIRE planning tools for Traditional, Coast, Barista, Lean, and Fat FIRE.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
+  },
+  description:
+    "Deterministic FIRE planning tools for Traditional, Coast, Barista, Lean, and Fat FIRE.",
+  applicationName: SITE_NAME,
+  alternates: {
+    canonical: absoluteUrl("/"),
+  },
+  openGraph: {
+    title: SITE_NAME,
+    description:
+      "Compare Traditional, Coast, Barista, Lean, and Fat FIRE from one shared scenario.",
+    url: absoluteUrl("/"),
+    siteName: SITE_NAME,
+    type: "website",
+    images: [
+      {
+        url: absoluteUrl("/opengraph-image"),
+        width: 1200,
+        height: 630,
+        alt: "FIRE Calculators planner preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description:
+      "Compare Traditional, Coast, Barista, Lean, and Fat FIRE from one shared scenario.",
+    images: [absoluteUrl("/opengraph-image")],
+  },
 };
 
 export default function RootLayout({
