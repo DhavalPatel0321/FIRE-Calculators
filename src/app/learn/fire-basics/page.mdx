@@ -1,0 +1,29 @@
+import Link from "next/link";
+
+export const metadata = {
+  title: "FIRE basics · FIRE Calculators",
+  description:
+    "A short introduction to financial independence, FIRE variants, and the shared planner.",
+};
+
+# FIRE basics
+
+Financial Independence / Retire Early is a planning framework for building enough invested assets that work becomes optional. The point is not one fixed retirement age. The point is understanding the relationship between spending, savings, investment growth, and the income you still want or need from work.
+
+The common 4% rule says a starting portfolio target is roughly **25x annual expenses**. A household spending $60,000 per year would use about $1.5 million as a first-pass Traditional FIRE target. The actual number moves when you change the safe withdrawal rate, expenses, current assets, contributions, or target retirement age.
+
+## The five-variant spectrum
+
+- **Traditional FIRE** asks what portfolio can fully cover annual expenses.
+- **Coast FIRE** asks how much needs to be invested today so compounding can do the rest by the target age.
+- **Barista FIRE** asks what portfolio covers only the gap after part-time income.
+- **Lean FIRE** models a lower-expense lifestyle with a smaller portfolio target.
+- **Fat FIRE** models a higher-expense lifestyle with a larger portfolio target.
+
+All five variants use the same financial profile so a change to savings, spending, returns, or withdrawal rate updates every answer together.
+
+## What the planner does
+
+The <Link href="/plan">planner</Link> takes one set of inputs and computes all five FIRE variants side by side. It shows each target number, the estimated time to reach it, and a shared portfolio growth chart so the tradeoffs are visible without jumping between separate calculators.
+
+You can also share a scenario with URL parameters or compare up to three scenarios on <Link href="/plan/compare">the comparison page</Link>. v1 is deterministic: it uses the assumptions you enter and does not run Monte Carlo simulations, tax projections, Social Security estimates, or account-specific withdrawal modeling.

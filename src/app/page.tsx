@@ -132,10 +132,6 @@ export default function LandingPage() {
               </li>
             ))}
           </ul>
-          <p className="text-xs leading-5 text-slate-500">
-            Note: the Learn section is a temporary placeholder until the next
-            content sprint adds the MDX explainers.
-          </p>
         </div>
       </section>
 

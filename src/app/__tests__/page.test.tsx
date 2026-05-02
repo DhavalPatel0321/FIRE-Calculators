@@ -1,7 +1,8 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
-import LearnPlaceholderPage from "@/app/learn/page";
+import FireBasicsPage from "@/app/learn/fire-basics/page.mdx";
+import LearnPage from "@/app/learn/page";
 import LandingPage from "@/app/page";
 import { VARIANT_ORDER } from "@/components/plan/variant-theme";
 
@@ -51,17 +52,40 @@ describe("Landing page", () => {
   });
 });
 
-describe("Learn placeholder page", () => {
+describe("Learn page", () => {
   afterEach(() => {
     cleanup();
   });
 
-  it("renders a temporary learn landing page with a planner CTA", () => {
-    render(<LearnPlaceholderPage />);
-    expect(screen.getByTestId("learn-placeholder-page")).toHaveTextContent(
-      /fire explainers are coming next/i,
-    );
-    expect(screen.getByTestId("learn-placeholder-plan-link")).toHaveAttribute(
+  it("renders a card for each planned explainer", () => {
+    render(<LearnPage />);
+
+    const expectedSlugs = [
+      "fire-basics",
+      "traditional-fire",
+      "coast-fire",
+      "barista-fire",
+      "lean-fire",
+      "fat-fire",
+      "swr",
+    ];
+
+    for (const slug of expectedSlugs) {
+      expect(screen.getByTestId(`learn-card-${slug}`)).toHaveAttribute(
+        "href",
+        `/learn/${slug}`,
+      );
+    }
+  });
+
+  it("renders the fire-basics MDX headline and planner link", () => {
+    render(<FireBasicsPage />);
+
+    expect(
+      screen.getByRole("heading", { name: /fire basics/i, level: 1 }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/the common 4% rule/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /planner/i })).toHaveAttribute(
       "href",
       "/plan",
     );
