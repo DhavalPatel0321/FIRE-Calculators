@@ -41,6 +41,7 @@ export function CopyUrlButton() {
       variant="outline"
       size="sm"
       data-testid="copy-url"
+      aria-live="polite"
       onClick={handleClick}
     >
       {copied ? "Copied!" : "Copy share URL"}

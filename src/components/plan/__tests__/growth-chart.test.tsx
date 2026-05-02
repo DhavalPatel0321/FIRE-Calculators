@@ -78,7 +78,16 @@ describe("<GrowthChart />", () => {
   it("renders the chart, legend, and five variant legend entries", () => {
     render(<GrowthChart />);
     expect(screen.getByTestId("growth-chart")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", {
+        name: /projected portfolio balance by age/i,
+      }),
+    ).toBeInTheDocument();
     const legend = screen.getByTestId("growth-chart-legend");
+    expect(legend).toHaveAttribute(
+      "aria-label",
+      "Toggle FIRE target reference lines",
+    );
     expect(within(legend).getByText("Portfolio")).toBeInTheDocument();
     for (const variant of VARIANT_ORDER) {
       expect(

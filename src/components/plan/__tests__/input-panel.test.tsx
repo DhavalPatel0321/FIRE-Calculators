@@ -72,6 +72,26 @@ describe("<InputPanel />", () => {
     );
   });
 
+  it("exposes accessible names for number fields, sliders, and reset", () => {
+    render(<InputPanel />);
+
+    expect(screen.getByLabelText("Current age")).toBe(
+      screen.getByTestId("input-currentAge"),
+    );
+    expect(screen.getByLabelText("Annual contribution")).toBe(
+      screen.getByTestId("input-annualContribution"),
+    );
+    expect(
+      screen.getByRole("slider", { name: "Expected real return" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: "Safe withdrawal rate" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Reset inputs to defaults" }),
+    ).toBe(screen.getByTestId("reset-inputs"));
+  });
+
   it("displays $ amounts with comma separators", () => {
     render(<InputPanel />);
     expect(

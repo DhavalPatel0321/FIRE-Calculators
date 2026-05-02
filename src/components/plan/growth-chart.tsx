@@ -98,7 +98,11 @@ export function GrowthChart() {
         </div>
       </div>
 
-      <div className="h-64 w-full">
+      <div
+        className="h-64 w-full"
+        role="img"
+        aria-label="Projected portfolio balance by age with FIRE target reference lines"
+      >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={series}
@@ -177,6 +181,7 @@ export function GrowthChart() {
 
       <ul
         data-testid="growth-chart-legend"
+        aria-label="Toggle FIRE target reference lines"
         className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-600"
       >
         <li className="flex items-center gap-1.5">

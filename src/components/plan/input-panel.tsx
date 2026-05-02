@@ -126,16 +126,23 @@ function PercentSlider({
   step,
 }: PercentSliderProps) {
   const id = useId();
+  const labelId = `${id}-label`;
+  const valueId = `${id}-value`;
   const setInput = useScenarioStore((state) => state.setInput);
   const display = `${(value * 100).toFixed(1)}%`;
 
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <Label htmlFor={id} className="text-xs font-medium text-slate-600">
+        <Label
+          id={labelId}
+          htmlFor={id}
+          className="text-xs font-medium text-slate-600"
+        >
           {label}
         </Label>
         <span
+          id={valueId}
           data-testid={`slider-value-${field}`}
           className="text-xs font-semibold text-slate-900 tabular-nums"
         >
@@ -149,6 +156,9 @@ function PercentSlider({
         min={min}
         max={max}
         step={step}
+        aria-label={label}
+        aria-labelledby={labelId}
+        aria-describedby={valueId}
         onValueChange={(nextValue) => {
           const next = Array.isArray(nextValue) ? nextValue[0] : nextValue;
           if (typeof next === "number" && Number.isFinite(next)) {
@@ -156,7 +166,7 @@ function PercentSlider({
           }
         }}
       />
-      <div className="flex justify-between text-[10px] text-slate-400 tabular-nums">
+      <div className="flex justify-between text-[10px] text-slate-500 tabular-nums">
         <span>{(min * 100).toFixed(1)}%</span>
         <span>{(max * 100).toFixed(1)}%</span>
       </div>
@@ -179,6 +189,7 @@ export function InputPanel() {
             variant="ghost"
             size="sm"
             data-testid="reset-inputs"
+            aria-label="Reset inputs to defaults"
             onClick={resetInputs}
           >
             Reset

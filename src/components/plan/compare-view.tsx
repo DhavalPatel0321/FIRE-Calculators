@@ -261,7 +261,7 @@ export function CompareView() {
               <Link
                 href={editHref}
                 data-testid="compare-edit-link"
-                className="text-xs font-medium text-slate-500 underline-offset-4 hover:text-slate-900 hover:underline"
+                className="text-xs font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
               >
                 Edit first scenario on /plan →
               </Link>
@@ -307,7 +307,15 @@ export function CompareView() {
               </p>
             </div>
           </div>
-          <div className="h-72 w-full">
+          <div
+            className="h-72 w-full"
+            role={hasMounted && state.scenarios.length > 0 ? "img" : undefined}
+            aria-label={
+              hasMounted && state.scenarios.length > 0
+                ? "Overlaid portfolio balances by age for saved scenarios"
+                : undefined
+            }
+          >
             {hasMounted && state.scenarios.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart

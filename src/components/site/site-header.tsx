@@ -37,7 +37,7 @@ export function SiteHeader() {
               key={link.href}
               href={link.href}
               data-testid={`site-header-nav-${link.label.toLowerCase()}`}
-              className="rounded-full px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+              className="rounded-full px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
             >
               {link.label}
             </Link>
@@ -46,7 +46,7 @@ export function SiteHeader() {
         <Link
           href="/plan"
           data-testid="site-header-cta"
-          className="inline-flex items-center gap-1 rounded-full bg-slate-900 px-3.5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+          className="inline-flex items-center gap-1 rounded-full bg-slate-900 px-3.5 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
         >
           Start planning
           <span aria-hidden="true">→</span>

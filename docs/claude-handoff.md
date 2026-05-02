@@ -1,9 +1,9 @@
 # Claude Handoff
 
 Last updated: 2026-05-02
-Current stop point on `main`: this F1 commit (last product commit: F1)
+Current stop point on `main`: this F2 commit (last product commit: F2)
 
-> Verified on 2026-05-02 against the current tree: F1 is complete, local gates are green, and the next required product commit is **F2**. The state described below is accurate.
+> Verified on 2026-05-02 against the current tree: F2 is complete, local gates are green, and the next required product commit is **F3**. The state described below is accurate.
 
 ## Read this first on resume
 
@@ -21,9 +21,9 @@ At the end of each session for this project, replace this file with a fresh hand
 - Track A (Foundation), Track B (Calc core), Track C (Planner UI), and Track D (Persistence + Compare) are complete.
 - `/plan` hydrates from URL, debounces store-driven URL updates via `history.replaceState`, has a Copy-share-URL button, formats $ amounts with comma separators, and links to `/plan/compare`.
 - `/plan/compare` overlays up to 3 scenarios with their own slate/emerald/violet palette, hydrates from `?sN.*` URL params, and re-keys slots after removal.
-- The next required product commit is **F2**:
-  `feat(a11y): keyboard nav, labels, focus, contrast audit`
-- Do not start F3 until F2 is committed, pushed, and CI is green.
+- The next required product commit is **F3**:
+  `feat(analytics): Vercel Analytics`
+- Do not start F4 until F3 is committed, pushed, and CI is green.
 
 Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1):
 
@@ -32,8 +32,8 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - C1-C5: complete
 - D1, D2: complete
 - E1-E2: complete
-- F1: complete
-- F2-F5: not started
+- F1-F2: complete
+- F3-F5: not started
 
 ## Latest pushed commits
 
@@ -44,6 +44,7 @@ Current checked items live in [docs/work-plan.md](/Users/dhavalpatel/projects/FI
 - this E1 commit `feat(content): add MDX learn basics`
 - this E2 commit `feat(content): add FIRE variant explainers`
 - this F1 commit `feat(seo): add metadata routes and OG image`
+- this F2 commit `feat(a11y): improve planner accessibility`
 
 Latest confirmed green GitHub Actions runs:
 
@@ -72,7 +73,7 @@ Latest confirmed green GitHub Actions runs:
 - `/opengraph-image`, `/sitemap.xml`, `/robots.txt` — metadata routes for social previews and indexing.
 - Site chrome at [src/components/site](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/site:1) (`SiteHeader`, `SiteFooter`), mounted in [src/app/layout.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/layout.tsx:1).
 - Planner components at [src/components/plan](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan:1):
-  - `InputPanel` — Personal/Financial/Assumptions/Advanced. `<NumberField />` is a draft-aware text input (`type="text"`) that displays thousands separators via `formatNumberDisplay` and sanitizes via `sanitizeNumberInput`. **Don't revert to `type="number"`** — that's what allowed the leading-zero bug.
+  - `InputPanel` — Personal/Financial/Assumptions/Advanced. `<NumberField />` is a draft-aware text input (`type="text"`) that displays thousands separators via `formatNumberDisplay` and sanitizes via `sanitizeNumberInput`. **Don't revert to `type="number"`** — that's what allowed the leading-zero bug. Sliders use native `input type="range"` through `src/components/ui/slider.tsx` for accessible names and keyboard behavior.
   - `ResultCards`, `GrowthChart` (with `REFERENCE_LABEL_POSITION = "insideTopRight"`, exported and regression-tested), `ScenarioUrlSync`, `CopyUrlButton`.
   - `variant-theme.ts` — `VARIANT_ORDER`, `VARIANT_THEME` (single source of truth for variant colors). Used by ResultCards, GrowthChart, and the landing page.
   - `scenario-palette.ts` — `SCENARIO_PALETTE` (slot 1 slate, slot 2 emerald, slot 3 violet). **Distinct from VARIANT_THEME.** Content pages generally do not need this; D2 uses it.
@@ -138,40 +139,36 @@ export PATH="$(dirname "$NODE20"):$PATH"
 - TSX component tests run under Vitest via `@vitejs/plugin-react`. React Testing Library + jsdom works.
 - For Recharts tests, mock `ResponsiveContainer` with a sized div. The same mock pattern works for `<CompareView />`.
 - For `<ScenarioUrlSync />` and `<CompareView />` tests, `vi.useFakeTimers()` is required because the URL update is debounced. Use `window.history.replaceState` to seed the URL before mount.
-- Last local verification (after F1):
-  - `npx vitest run` — 26 files / 129 tests passing
+- Last local verification (after F2):
+  - `npx vitest run` — 26 files / 130 tests passing
   - `npm run typecheck`
-  - `npm run build` — includes `/opengraph-image`, `/robots.txt`, `/sitemap.xml`
+  - `npm run build` — `/plan` 279 kB, `/plan/compare` 277 kB
   - `npm run lint`
 - Vitest coverage config still only tracks `src/lib/calc/**`.
 
-## Files to inspect before starting F2
+## Files to inspect before starting F3
 
 - [docs/work-plan.md](/Users/dhavalpatel/projects/FIRE-Calculators/docs/work-plan.md:1)
-- [src/components/site/site-header.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/site/site-header.tsx:1) — keyboard/focus nav behavior
-- [src/components/plan/input-panel.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/input-panel.tsx:1) — form labels, input semantics, slider labels
-- [src/components/plan/result-cards.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/result-cards.tsx:1), [src/components/plan/growth-chart.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/components/plan/growth-chart.tsx:1), and compare components — labels/focus/contrast
+- [src/app/layout.tsx](/Users/dhavalpatel/projects/FIRE-Calculators/src/app/layout.tsx:1) — likely place to mount Vercel Analytics
+- [package.json](/Users/dhavalpatel/projects/FIRE-Calculators/package.json:1) — add analytics dependency if needed
 
-## F2 restart brief
+## F3 restart brief
 
 Implement exactly:
 
-`feat(a11y): keyboard nav, labels, focus, contrast audit`
+`feat(analytics): Vercel Analytics`
 
 Expected deliverables:
 
-- Audit keyboard navigation and focus-visible states across header, planner inputs, chart toggles, copy/share, compare controls, and learn links.
-- Ensure inputs and sliders have robust accessible names/labels.
-- Check color contrast for small text, badges, buttons, and chart controls; adjust low-contrast classes.
-- Add focused tests where practical for accessible names or keyboard-triggered controls.
+- Install and mount Vercel Analytics using the official package for Next.js App Router.
+- Keep analytics client component isolated to layout/chrome; no custom event scope is required for v1.
 - Tests:
-  - Keep route render/component tests green.
-  - Add assertions for any a11y semantics changed in F2.
+  - Existing unit/type/build/lint gates stay green.
 
-Out of scope for F2:
+Out of scope for F3:
 
-- Analytics — F3.
 - Playwright golden path — F4.
+- Deployment / README update — F5.
 
 ## Working tree notes
 
